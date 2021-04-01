@@ -1,20 +1,12 @@
-// Import dependencies
-
 const express = require('express');
 const cors = require('cors');
+const con = require('./models/db');
 
 const app = express();
 app.use(express.json());
 
 // Connect to MySQL
 
-const mysql = require('mysql');
-var con = mysql.createConnection({
-    host: "remotemysql.com",
-    user: "lJForg58Kr",
-    password: "GOgHlsKN1d",
-    database:"lJForg58Kr"
-});  
 con.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
@@ -22,11 +14,11 @@ con.connect(function(err) {
 
 // APIs
 
-app.get('/demo',(req,res) => {
-    res.json({
-        "data": "done"
-    });
-});
+app.use('/api/auth/',require('./routes/authRoutes'));
+app.use('/api/student/',require('./routes/studentRoutes'));
+app.use('/api/admin/',require('./routes/adminRoutes'));
+
+// Run the port on 4000
 
 const port = process.env.PORT || 4000;
 app.listen(port);
