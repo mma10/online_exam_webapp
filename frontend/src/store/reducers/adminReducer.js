@@ -1,5 +1,5 @@
 const initState = {
-
+    
 }
 
 const adminReducer = (state = initState,action) => {

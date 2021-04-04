@@ -5,5 +5,15 @@ const students = require('../controllers/authController');
 
 // Routes
 
+const auth = require('../controllers/authController');
+
+// Routes
+router.get('/', auth.createToken);
+
+router.get('/login/', auth.loginPage);
+
+router.post('/check/', auth.checkLogin);
+
+router.get('/logout/', auth.logout);
 
 module.exports = router;
