@@ -27,20 +27,30 @@ exports.createToken=(request, response)=>{
     var cookies=parseCookies(request);
     var token=cookies['token'];
     if(!token || !users[token]){
-      var id=makeid(idlen);
+      var id;
+      if(!token)
+        id=makeid(idlen);
+      else
+        id = token;
       while(users[id]) id=makeid(idlen);
       response.cookie('token',id);
       console.log(id);
-      users[id]={"logged_in":false};
+      users[id]={"logged_in":false};  
+      response.redirect(base_url+'login/');    
     }
-    response.redirect(base_url+'login/');
+    else if(users[token]["logged_in"] == false)
+      response.redirect(base_url+'login/');
+    else  
+      response.send("Already logged in");
+
 }
 
 exports.loginPage=(request, response)=>{
     var cookies=parseCookies(request);
     var token=cookies['token'];
     if(!token || !users[token]) return response.redirect(base_url);
-    return response.sendFile(__dirname+'/html/login.html');
+    // Bring to the login page
+    return response.send('Login from the given login page');
 }
 
 exports.checkLogin=(request, response)=>{
@@ -58,7 +68,7 @@ exports.checkLogin=(request, response)=>{
     q="select * from "+actype+" where uname = '"+uname+"' and password = '"+pass+"'";
     sql.query(q,(err,results,fields)=>{
       if(err){console.log(err);return response.send("Error");}
-      if(results.length<=0) response.send("Invalid Data");
+      if(results.length<=0) response.send("Invalid credintials");
       else{
         users[token]={"uname":uname,"pass":pass,"actype":actype,"logged_in":true};
         response.send("Login Successfull");
