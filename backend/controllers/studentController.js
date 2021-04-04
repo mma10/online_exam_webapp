@@ -1,7 +1,7 @@
 // const students = require('../models/studentModel');
 // const register = require('../models/registerModel');
 
-const sql = require('../models/db');
+var sql = require('../models/db');
 const auth=require('./authController.js');
 const base_url='/api/auth/';
 
@@ -13,15 +13,16 @@ exports.findStudentSubjects = (req,res) => {
     
     var id = parseInt(req.params.student_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err) throw err;
+        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
         if(results[0]['st_id']!=id){return res.send("Invalid Student Id");}
         var query = "SELECT sub_id, name FROM subject WHERE sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
         sql.query(query,[id],(err, result) => {
             if(err){
+                sql=require('../models/db');
+                console.log(err);
                 res.status(404).json({
-                    msg: "Failed to get response"
+                    msg: "Failed to get res"
                 });
-                throw err;
             }
             res.status(200).json(result);
         });
@@ -36,15 +37,16 @@ exports.findStudentExams = (req,res) => {
 
     var id = parseInt(req.params.student_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err) throw err;
+        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
         if(results[0]['st_id']!=id){return res.send("Invalid Student Id");}
         var query = "SELECT * FROM exam WHERE sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
         sql.query(query,[id],(err, result) => {
             if(err){
+                sql=require('../models/db');
+                console.log(err);
                 res.status(404).json({
                     msg: "Failed to get exams"
                 });
-            throw err;
             }
             res.status(200).json(result);
         }); 
@@ -53,7 +55,7 @@ exports.findStudentExams = (req,res) => {
 
 exports.submitStudentExam = (req,res) => {
     // body = {
-    //     responses: [{qid, response, qMarks}]
+    //     responses: [{qid, res, qMarks}]
     //     class:
     //     sub_id:
     //     year:
@@ -65,7 +67,7 @@ exports.submitStudentExam = (req,res) => {
     var unamequery="select * from student where uname = '"+details['uname']+"'";
 
     sql.query(unamequery, (err, results, fields) => {
-        if(err) throw err;
+        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
         if(results[0]['st_id']!=id){return res.send("Invalid Student Id");}
         // Extract student and exam id
         var studentId = parseInt(req.params.student_id);
@@ -76,23 +78,24 @@ exports.submitStudentExam = (req,res) => {
         var numberResAdded = 0;
         var responses = req.body.responses;
         var body = req.body;
-        var query = "INSERT INTO response (st_id,eid,qid,response) VALUES ?";
+        var query = "INSERT INTO res (st_id,eid,qid,res) VALUES ?";
         var values = [];
         responses.forEach(res => {
             var temp = [];
             temp.push(parseInt(studentId));
             temp.push(parseInt(examId));
             temp.push(res.qid);
-            temp.push(res.response);
+            temp.push(res.res);
             values.push(temp);
         });
 
         sql.query(query,[values],(err, result) => {
             if(err){
+                sql=require('../models/db');
+                console.log(err);
                 res.status(404).json({
                     msg: "Failed to insert the data into Response"
                 });
-                throw err;
             }
             numberResAdded = result.affectedRows;
         });
@@ -102,10 +105,11 @@ exports.submitStudentExam = (req,res) => {
         query = "SELECT qid, ans FROM question WHERE eid = ?";
         sql.query(query,[examId],(err,result) => {
             if(err){
+                sql=require('../models/db');
+                console.log(err);
                 res.status(404).json({
                     msg: "Failed to get corrected answers"
                 });
-                throw err;
             }
             var correctAns = result;
             console.log(correctAns, " correct ans ");
@@ -124,7 +128,7 @@ exports.submitStudentExam = (req,res) => {
             var marks = 0;
             var maxMarks = body.max_marks;
             for(var i=0; i<responses.length; i++){
-                if(responses[i].response == correctAns[i].ans)
+                if(responses[i].res == correctAns[i].ans)
                     marks += responses[i].qMarks;
             }
 
@@ -137,10 +141,11 @@ exports.submitStudentExam = (req,res) => {
             console.log(values);
             sql.query(query,[array],(err,result) => {
                 if(err){
+                    sql=require('../models/db');
+                    console.log(err);
                     res.status(404).json({
                         msg: "Failed to insert into Results"
                     });
-                    throw err;
                 }
                 res.status(200).json({
                     affectedRows_Result: result.affectedRows
@@ -159,15 +164,16 @@ exports.findStudentResults = (req,res) => {
 
     var id = parseInt(req.params.student_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err) throw err;
+        if(err) {sql=require('../models/db');console.log(err);return res.send("Error");}
         if(results[0]['st_id']!=id){return res.send("Invalid Student Id");}
         var query = "SELECT * FROM result WHERE st_id = ?";
         sql.query(query,[id],(err,result) => {
             if(err){
+                sql=require('../models/db');
+                console.log(err);
                 res.status(404).json({
                     msg: "Falied to get results"
                 });
-                throw err;
             }
             res.status(200).json(result);
         });

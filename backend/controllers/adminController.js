@@ -1,4 +1,4 @@
-const sql = require('../models/db.js');
+var sql = require('../models/db.js');
 const auth=require('./authController.js');
 const base_url='/api/auth/';
 
@@ -9,14 +9,14 @@ exports.findAllSubjects = (req,res) => {
     var unamequery="select * from admin where uname = '"+details['uname']+"'";
     var admin_id = parseInt(req.params.admin_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err) throw err;
+        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
         if(results[0]['ad_id']!=admin_id){return res.send("Invalid admin id");}
         var q = "select sub_id from adminsub where ad_id = " + admin_id + " ";
         sql.query(q, (err, results, fields) => {
-            if(err) throw err;
+            if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
             //console.log(results);
             console.log("Retrieved all subject list");
-            return res.status(200).json(results);
+            res.status(200).json(results);
         });
     });
 };
@@ -29,12 +29,12 @@ exports.findSubjectStudent = (req, res) => {
     var admin_id = parseInt(req.params.admin_id);
     var sub_id = parseInt(req.params.subject_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err) throw err;
+        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
         if(results[0]['ad_id']!=admin_id){return res.send("Invalid admin id");}
         var q = "select registration.st_id, result.marks, result.Max_marks from registration inner join result on registration.sub_id = result.sub_id where registration.sub_id = " + sub_id + " ";
         console.log(q);
         sql.query(q, (err, results, fields) => {
-            if(err) throw err;
+            if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
             console.log(results);
             res.status(200).json(results);
             console.log("Retrieved all students for the subject_id :" + sub_id + " ");
@@ -97,7 +97,7 @@ exports.submitQuestionPaper = (req, res) => {
     if(!details || details['actype']!='admin') return res.redirect(base_url);
     var unamequery="select * from admin where uname = '"+details['uname']+"'";
     sql.query(unamequery, (err, results, fields) => {
-        if(err) throw err;
+        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
         if(results[0]['ad_id']!=admin_id){return res.send("Invalid admin id");}
         // Extracting parameters
         var admin_id = parseInt(req.params.admin_id);
@@ -124,7 +124,7 @@ exports.submitQuestionPaper = (req, res) => {
         array.push(values);
         console.log(values);
         sql.query(query2, [array], (err, results, fields) => {
-            if(err) throw err;
+            if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
             res.status(200).json({
                 affectedRows_Result: results.affectedRows
             });
@@ -150,7 +150,7 @@ exports.submitQuestionPaper = (req, res) => {
 
         //console.log(query1);
         sql.query(query1, [values], (err, results, fields) => {
-            if(err) throw err;
+            if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
             numberResAdded = results.affectedRows;
             console.log("total rows inserted into question table : " + numberResAdded + " ");
         });
