@@ -32,41 +32,59 @@ exports.createToken=(request, response)=>{
       response.cookie('token',id);
       console.log(id);
       users[id]={"logged_in":false};
-      response.redirect(base_url+'login/');
     }
-    else if(users[token]["logged_in"] == true){
-      res.send("Already logged in");
-    }
-    else
-      response.redirect(base_url+'login/');    
+    response.redirect(base_url+'login/');
 }
 
 exports.loginPage=(request, response)=>{
     var cookies=parseCookies(request);
     var token=cookies['token'];
     if(!token || !users[token]) return response.redirect(base_url);
-    return response.send('Login in the form')
+    if(!users[token]['logged_in']) return response.sendFile(__dirname+'/html/login.html');
+    else{
+      return response.status(200).json({
+        msg: "Already Logged In"
+      });
+    };
 }
 
 exports.checkLogin=(request, response)=>{
     var cookies=parseCookies(request);
     var token=cookies['token'];
     if(!token || !users[token]) return response.redirect(base_url);
-    if(users[token]["logged_in"]) return response.send('Already Logged In');
+    if(users[token]["logged_in"]){
+      return response.status(200).json({
+        msg: "Already Logged In"
+      });
+    };
     var uname=request.body.uname;
     var pass=request.body.pass;
     var actype=request.body.actype;
     if(!uname || !pass || !actype){
         console.log("Crededntial are null");
-        return response.send("Crededntial are null");
+        return response.status(200).json({
+          msg :"Crededntial are null"
+        });
     }
     q="select * from "+actype+" where uname = '"+uname+"' and password = '"+pass+"'";
     sql.query(q,(err,results,fields)=>{
-      if(err){sql=require('../models/db');console.log(err);return response.send("Error");}
-      if(results.length<=0) response.send("Invalid Data");
+      if(err){
+        sql=require('../models/db');
+        console.log(err);
+        return response.status(200).json({
+          msg :"Error"
+        });
+      }
+      if(results.length<=0){
+        return response.status(200).json({
+          msg :"Invalid Data"
+        });
+      }
       else{
         users[token]={"uname":uname,"pass":pass,"actype":actype,"logged_in":true};
-        response.send("Login Successfull");
+        return response.status(200).json({
+          msg :"Login Successfull"
+        });
       }
     });
 }
@@ -78,9 +96,13 @@ exports.logout=(request,response)=>{
     if(users[token]["logged_in"]){
       response.clearCookie('token');
       delete(users.token);
-      return response.send('Logged out');
+      return response.status(200).json({
+        msg :"Logged Out"
+      });
     }
-    return response.send('Some Data Error Occured');
+    return response.status(200).json({
+      msg :"Some Error Occured"
+    });
 }
 
 

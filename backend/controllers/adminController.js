@@ -5,18 +5,39 @@ const base_url='/api/auth/';
 
 exports.findAllSubjects = (req,res) => {
     var details=auth.checkAuth(req);
-    if(!details || details['actype']!='admin') return res.redirect(base_url);
+    if(!details) return res.redirect(base_url);
+    if(details['actype']!='admin'){
+        return res.status(200).json({
+            msg :"You Don't Have Admin Account"
+        });
+    }
     var unamequery="select * from admin where uname = '"+details['uname']+"'";
     var admin_id = parseInt(req.params.admin_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
-        if(results[0]['ad_id']!=admin_id){return res.send("Invalid admin id");}
+        if(err){
+            sql=require('../models/db');
+            console.log(err);
+            return res.status(200).json({
+                msg :"Error"
+            });
+        }
+        if(results[0]['ad_id']!=admin_id){
+            return res.status(200).json({
+                msg :"Invalid Admin Id"
+            });
+        }
         var q = "select sub_id from adminsub where ad_id = " + admin_id + " ";
         sql.query(q, (err, results, fields) => {
-            if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
+            if(err){
+                sql=require('../models/db');
+                console.log(err);
+                return res.status(200).json({
+                    msg :"Error"
+                });
+            }
             //console.log(results);
             console.log("Retrieved all subject list");
-            res.status(200).json(results);
+            return res.status(200).json(results);
         });
     });
 };
@@ -24,20 +45,41 @@ exports.findAllSubjects = (req,res) => {
 
 exports.findSubjectStudent = (req, res) => {
     var details=auth.checkAuth(req);
-    if(!details || details['actype']!='admin') return res.redirect(base_url);
+    if(!details) return res.redirect(base_url);
+    if(details['actype']!='admin'){
+        return res.status(200).json({
+            msg :"You Don't Have Admin Account"
+        });
+    }
     var unamequery="select * from admin where uname = '"+details['uname']+"'";
     var admin_id = parseInt(req.params.admin_id);
     var sub_id = parseInt(req.params.subject_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
-        if(results[0]['ad_id']!=admin_id){return res.send("Invalid admin id");}
+        if(err){
+            sql=require('../models/db');
+            console.log(err);
+            return res.status(200).json({
+                msg :"Error"
+            });
+        }
+        if(results[0]['ad_id']!=admin_id){
+            return res.status(200).json({
+                msg :"Invalid Admin Id"
+            });
+        }
         var q = "select registration.st_id, result.marks, result.Max_marks from registration inner join result on registration.sub_id = result.sub_id where registration.sub_id = " + sub_id + " ";
         console.log(q);
         sql.query(q, (err, results, fields) => {
-            if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
+            if(err){
+                sql=require('../models/db');
+                console.log(err);
+                return res.status(200).json({
+                    msg :"Error"
+                });
+            }
             console.log(results);
-            res.status(200).json(results);
             console.log("Retrieved all students for the subject_id :" + sub_id + " ");
+            return res.status(200).json(results);
         });
     });
 };
@@ -94,11 +136,26 @@ exports.submitQuestionPaper = (req, res) => {
     */
 
     var details=auth.checkAuth(req);
-    if(!details || details['actype']!='admin') return res.redirect(base_url);
+    if(!details) return res.redirect(base_url);
+    if(details['actype']!='admin'){
+        return res.status(200).json({
+            msg :"You Don't Have Admin Account"
+        });
+    }
     var unamequery="select * from admin where uname = '"+details['uname']+"'";
     sql.query(unamequery, (err, results, fields) => {
-        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
-        if(results[0]['ad_id']!=admin_id){return res.send("Invalid admin id");}
+        if(err){
+            sql=require('../models/db');
+            console.log(err);
+            return res.status(200).json({
+                msg :"Error"
+            });
+        }
+        if(results[0]['ad_id']!=admin_id){
+            return res.status(200).json({
+                msg :"Invalid Admin Id"
+            });
+        }
         // Extracting parameters
         var admin_id = parseInt(req.params.admin_id);
         var exam_id = parseInt(req.params.exam_id);
@@ -124,11 +181,17 @@ exports.submitQuestionPaper = (req, res) => {
         array.push(values);
         console.log(values);
         sql.query(query2, [array], (err, results, fields) => {
-            if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
-            res.status(200).json({
+            if(err){
+                sql=require('../models/db');
+                console.log(err);
+                return res.status(200).json({
+                    msg :"Error"
+                });
+            }
+            console.log("total rows inserted into question table : " + numberResAdded + " ");
+            return res.status(200).json({
                 affectedRows_Result: results.affectedRows
             });
-            console.log("total rows inserted into question table : " + numberResAdded + " ");
         });
 
         values = [];
@@ -150,7 +213,13 @@ exports.submitQuestionPaper = (req, res) => {
 
         //console.log(query1);
         sql.query(query1, [values], (err, results, fields) => {
-            if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
+            if(err){
+                sql=require('../models/db');
+                console.log(err);
+                return res.status(200).json({
+                    msg :"Error"
+                });
+            }
             numberResAdded = results.affectedRows;
             console.log("total rows inserted into question table : " + numberResAdded + " ");
         });

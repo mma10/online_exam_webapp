@@ -1,6 +1,3 @@
-// const students = require('../models/studentModel');
-// const register = require('../models/registerModel');
-
 var sql = require('../models/db');
 const auth=require('./authController.js');
 const base_url='/api/auth/';
@@ -8,23 +5,38 @@ const base_url='/api/auth/';
 exports.findStudentSubjects = (req,res) => {
     // Take student_id and find all corresponding registered subjects
     var details=auth.checkAuth(req);
-    if(!details || details['actype']!='student') return res.redirect(base_url);
+    if(!details) return res.redirect(base_url);
+    if(details['actype']!='student'){
+        return res.status(200).json({
+            msg :"You Don't Have Student Account"
+        });
+    }
     var unamequery="select * from student where uname = '"+details['uname']+"'";
     
     var id = parseInt(req.params.student_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
-        if(results[0]['st_id']!=id){return res.send("Invalid Student Id");}
+        if(err){
+            sql=require('../models/db');
+            console.log(err);
+            return res.status(200).json({
+                msg :"Error"
+            });
+        }
+        if(results[0]['st_id']!=id){
+            return res.status(200).json({
+                msg :"Invalid Student Id"
+            });
+        }
         var query = "SELECT sub_id, name FROM subject WHERE sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
         sql.query(query,[id],(err, result) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
-                res.status(404).json({
+                return res.status(404).json({
                     msg: "Failed to get res"
                 });
             }
-            res.status(200).json(result);
+            return res.status(200).json(result);
         });
     });
 };
@@ -32,23 +44,38 @@ exports.findStudentSubjects = (req,res) => {
 exports.findStudentExams = (req,res) => {
     // Take student_id and find all corresponding exams
     var details=auth.checkAuth(req);
-    if(!details || details['actype']!='student') return res.redirect(base_url);
+    if(!details) return res.redirect(base_url);
+    if(details['actype']!='student'){
+        return res.status(200).json({
+            msg :"You Don't Have Student Account"
+        });
+    }
     var unamequery="select * from student where uname = '"+details['uname']+"'";
 
     var id = parseInt(req.params.student_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
-        if(results[0]['st_id']!=id){return res.send("Invalid Student Id");}
+        if(err){
+            sql=require('../models/db');
+            console.log(err);
+            return res.status(200).json({
+                msg :"Error"
+            });
+        }
+        if(results[0]['st_id']!=id){
+            return res.status(200).json({
+                msg :"Invalid Student Id"
+            });
+        }
         var query = "SELECT * FROM exam WHERE sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
         sql.query(query,[id],(err, result) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
-                res.status(404).json({
+                return res.status(404).json({
                     msg: "Failed to get exams"
                 });
             }
-            res.status(200).json(result);
+            return res.status(200).json(result);
         }); 
     });
 };
@@ -63,12 +90,27 @@ exports.submitStudentExam = (req,res) => {
     // }
 
     var details=auth.checkAuth(req);
-    if(!details || details['actype']!='student') return res.redirect(base_url);
+    if(!details) return res.redirect(base_url);
+    if(details['actype']!='student'){
+        return res.status(200).json({
+            msg :"You Don't Have Student Account"
+        });
+    }
     var unamequery="select * from student where uname = '"+details['uname']+"'";
 
     sql.query(unamequery, (err, results, fields) => {
-        if(err){sql=require('../models/db');console.log(err);return res.send("Error");}
-        if(results[0]['st_id']!=id){return res.send("Invalid Student Id");}
+        if(err){
+            sql=require('../models/db');
+            console.log(err);
+            return res.status(200).json({
+                msg :"Error"
+            });
+        }
+        if(results[0]['st_id']!=id){
+            return res.status(200).json({
+                msg :"Invalid Student Id"
+            });
+        }
         // Extract student and exam id
         var studentId = parseInt(req.params.student_id);
         var examId = parseInt(req.params.exam_id);
@@ -94,7 +136,7 @@ exports.submitStudentExam = (req,res) => {
                 sql=require('../models/db');
                 console.log(err);
                 res.status(404).json({
-                    msg: "Failed to insert the data into Response"
+                    msg: "Failed to insert the data into res"
                 });
             }
             numberResAdded = result.affectedRows;
@@ -159,13 +201,28 @@ exports.submitStudentExam = (req,res) => {
 exports.findStudentResults = (req,res) => {
     // Find the results of the student
     var details=auth.checkAuth(req);
-    if(!details || details['actype']!='student') return res.redirect(base_url);
+    if(!details) return res.redirect(base_url);
+    if(details['actype']!='student'){
+        return res.status(200).json({
+            msg :"You Don't Have Student Account"
+        });
+    }
     var unamequery="select * from student where uname = '"+details['uname']+"'";
 
     var id = parseInt(req.params.student_id);
     sql.query(unamequery, (err, results, fields) => {
-        if(err) {sql=require('../models/db');console.log(err);return res.send("Error");}
-        if(results[0]['st_id']!=id){return res.send("Invalid Student Id");}
+        if(err) {
+            sql=require('../models/db');
+            console.log(err);
+            return res.status(200).json({
+                msg :"Error"
+            });
+        }
+        if(results[0]['st_id']!=id){
+            return res.status(200).json({
+                msg :"Invalid Student Id"
+            });
+        }
         var query = "SELECT * FROM result WHERE st_id = ?";
         sql.query(query,[id],(err,result) => {
             if(err){
