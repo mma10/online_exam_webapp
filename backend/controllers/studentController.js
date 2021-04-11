@@ -231,8 +231,32 @@ exports.findStudentResults = (req,res) => {
                 res.status(404).json({
                     msg: "Falied to get results"
                 });
-            }
-            res.status(200).json(result);
+            }  
+
+            // Sort the results yearwise                       
+            result.sort(function(a,b){
+                if(a.year <= b.year)
+                    return -1;
+                else
+                    return 1;
+            });
+            
+            // Parse the results yearwise into object
+            var resultObject = {
+                years: []
+            };
+            var year = 2000;
+            console.log(result);
+            result.forEach(rs => {
+                if(rs.year != year){
+                    year = rs.year;
+                    resultObject.years.push(year);
+                    resultObject[year] = []
+                }
+                resultObject[year].push(rs);
+            });
+            
+            res.status(200).json(resultObject);
         });
     });
 

@@ -1,5 +1,6 @@
 const initState = {
-
+    invigilatorId: null,
+    invigilatorName: null
 }
 
 const invigilatorReducer = (state = initState,action) => {

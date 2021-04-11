@@ -32,15 +32,20 @@ exports.createToken=(request, response)=>{
       response.cookie('token',id);
       console.log(id);
       users[id]={"logged_in":false};
+      response.redirect(base_url+'login/');
     }
-    response.redirect(base_url+'login/');
+    else if(users[token]["logged_in"] == true){
+      response.send("Already logged in");
+    }
+    else
+      response.redirect(base_url+'login/'); 
 }
 
 exports.loginPage=(request, response)=>{
     var cookies=parseCookies(request);
     var token=cookies['token'];
     if(!token || !users[token]) return response.redirect(base_url);
-    if(!users[token]['logged_in']) return response.sendFile(__dirname+'/html/login.html');
+    if(!users[token]['logged_in']) return response.send('Please login through the form');
     else{
       return response.status(200).json({
         msg: "Already Logged In"
