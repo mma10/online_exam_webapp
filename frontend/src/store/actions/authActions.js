@@ -1,0 +1,5 @@
+exports.logout = () => dispatch => {
+    dispatch({
+
+    });
+}

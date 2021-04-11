@@ -65,10 +65,10 @@ exports.submitStudentExam = (examId,studentId,examBody) => dipatch => {
 }
 
 exports.showStudentResults = id => dispatch => {
-    axios.get('/api/student/${id}/result')
+    axios.get('/api/student/${id}/results')
     .then(res => {
         dispatch({
-            type: 'GET_STUDENT_RESULT',
+            type: 'GET_STUDENT_RESULTS',
             payload: res.data
         })
     })
