@@ -1,5 +1,8 @@
 const initState = {
-
+    id: null,
+    type: null,
+    loggedIn: null,
+    name: null,
 }
 
 const authReducer = (state = initState,action) => {
@@ -9,4 +12,4 @@ const authReducer = (state = initState,action) => {
 
 }
 
-module.exports = authReducer;
+export default authReducer;

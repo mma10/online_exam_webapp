@@ -1,10 +1,11 @@
 const initState = {
-    studentId: null,
+    id: null,
     name: null,
     rollNo: null,
     class: null,
     subjects: null,
     exams: null,
+    currentExam: null,
     examMsg: null,
     results: null    
 }
@@ -14,7 +15,7 @@ const studentReducer = (state = initState,action) => {
         case 'GET_STUDENT_DETAILS':
             return({
                 ...state,
-                studentId: action.payload.studentId,
+                id: action.payload.studentId,
                 name: action.payload.name,
                 rollNo: action.payload.rollNo,
                 class: action.payload.class
@@ -30,6 +31,12 @@ const studentReducer = (state = initState,action) => {
             return({
                 ...state,
                 exams: action.payload
+            });
+
+        case 'DISPLAY_STUDENT_EXAM':
+            return({
+                ...state,
+                currentExam: action.payload
             });
 
         case 'SUBMIT_STUDENT_EXAM':
@@ -49,4 +56,4 @@ const studentReducer = (state = initState,action) => {
 
 }
 
-module.exports = studentReducer;
+export default studentReducer;

@@ -9,6 +9,6 @@ const rootReducer = combineReducers({
     error: errorReducer,
     student: studentReducer,
     admin: adminReducer,
-})
+});
 
 export default rootReducer;

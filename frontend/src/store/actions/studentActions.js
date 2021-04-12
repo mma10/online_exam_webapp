@@ -40,6 +40,26 @@ exports.showStudentExams = id => dispatch => {
     });
 }
 
+exports.showExamPaper = examId => dispatch => {
+    axios.get('/api/student/${examId}/exam')
+    .then(res => {
+        dispatch({
+            type: 'DISPLAY_STUDENT_EXAM',
+            payload: res.data
+        });
+    })
+    .catch(err => {
+        dispatch({
+            type: 'GET_ERROR',
+            payload: {
+                msg: err.response.data.msg,
+                status: err.response.status,
+                id: 'DISPLAY_STUDENT_EXAM_FAILED'                
+            }
+        })
+    })
+}
+
 exports.submitStudentExam = (examId,studentId,examBody) => dipatch => {
     axios.post('/api/student/${examId}/${studentId}/exam',examBody)
     .then(res => {

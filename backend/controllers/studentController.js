@@ -18,12 +18,12 @@ exports.findStudentSubjects = (req,res) => {
         if(err){
             sql=require('../models/db');
             console.log(err);
-            return res.status(200).json({
+            return res.status(400).json({
                 msg :"Error"
             });
         }
         if(results[0]['st_id']!=id){
-            return res.status(200).json({
+            return res.status(404).json({
                 msg :"Invalid Student Id"
             });
         }
@@ -32,7 +32,7 @@ exports.findStudentSubjects = (req,res) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
-                return res.status(404).json({
+                return res.status(400).json({
                     msg: "Failed to get res"
                 });
             }
@@ -46,7 +46,7 @@ exports.findStudentExams = (req,res) => {
     var details=auth.checkAuth(req);
     if(!details) return res.redirect(base_url);
     if(details['actype']!='student'){
-        return res.status(200).json({
+        return res.status(404).json({
             msg :"You Don't Have Student Account"
         });
     }
@@ -57,21 +57,22 @@ exports.findStudentExams = (req,res) => {
         if(err){
             sql=require('../models/db');
             console.log(err);
-            return res.status(200).json({
+            return res.status(400).json({
                 msg :"Error"
             });
         }
         if(results[0]['st_id']!=id){
-            return res.status(200).json({
+            return res.status(404).json({
                 msg :"Invalid Student Id"
             });
         }
-        var query = "SELECT * FROM exam WHERE sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
+
+        var query = "SELECT * FROM exam NATURAL JOIN subject WHERE  sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
         sql.query(query,[id],(err, result) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
-                return res.status(404).json({
+                return res.status(400).json({
                     msg: "Failed to get exams"
                 });
             }
@@ -79,6 +80,49 @@ exports.findStudentExams = (req,res) => {
         }); 
     });
 };
+
+exports.findExamPaper = (req,res) => {
+    var details=auth.checkAuth(req);
+    if(!details) return res.redirect(base_url);
+    if(details['actype']!='student'){
+        return res.status(404).json({
+            msg :"You Don't Have Student Account"
+        });
+    }
+
+    var examId = parseInt(req.params.exam_id);
+    var query1="select * from exam where eid = '" + examId + "'";        
+    sql.query(query1, (err, result) => {
+        if(err){
+            sql=require('../models/db');
+            console.log(err);
+            return res.status(400).json({
+                msg :"Error"
+            });
+        }
+        if(result.length <= 0){
+            return res.status(404).json({
+                msg :"Invalid Exam Id"
+            });
+        }
+
+        var examDetails = result;
+        var query = "SELECT * from question WHERE eid = ?"
+        sql.query(query,[examId],(err,result) => {
+            if(err){
+                sql=require('../models/db');
+                console.log(err);
+                return res.status(400).json({
+                    msg :"Error"
+                });
+            }
+            res.status(200).json({
+                examDetails,
+                questions: result
+            });
+        });
+    });
+}
 
 exports.submitStudentExam = (req,res) => {
     // body = {
@@ -92,7 +136,7 @@ exports.submitStudentExam = (req,res) => {
     var details=auth.checkAuth(req);
     if(!details) return res.redirect(base_url);
     if(details['actype']!='student'){
-        return res.status(200).json({
+        return res.status(404).json({
             msg :"You Don't Have Student Account"
         });
     }
@@ -102,12 +146,12 @@ exports.submitStudentExam = (req,res) => {
         if(err){
             sql=require('../models/db');
             console.log(err);
-            return res.status(200).json({
+            return res.status(400).json({
                 msg :"Error"
             });
         }
         if(results[0]['st_id']!=id){
-            return res.status(200).json({
+            return res.status(404).json({
                 msg :"Invalid Student Id"
             });
         }
@@ -135,7 +179,7 @@ exports.submitStudentExam = (req,res) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
-                res.status(404).json({
+                res.status(400).json({
                     msg: "Failed to insert the data into res"
                 });
             }
@@ -149,7 +193,7 @@ exports.submitStudentExam = (req,res) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
-                res.status(404).json({
+                res.status(400).json({
                     msg: "Failed to get corrected answers"
                 });
             }
@@ -185,7 +229,7 @@ exports.submitStudentExam = (req,res) => {
                 if(err){
                     sql=require('../models/db');
                     console.log(err);
-                    res.status(404).json({
+                    res.status(400).json({
                         msg: "Failed to insert into Results"
                     });
                 }
@@ -203,7 +247,7 @@ exports.findStudentResults = (req,res) => {
     var details=auth.checkAuth(req);
     if(!details) return res.redirect(base_url);
     if(details['actype']!='student'){
-        return res.status(200).json({
+        return res.status(404).json({
             msg :"You Don't Have Student Account"
         });
     }
@@ -214,12 +258,12 @@ exports.findStudentResults = (req,res) => {
         if(err) {
             sql=require('../models/db');
             console.log(err);
-            return res.status(200).json({
+            return res.status(400).json({
                 msg :"Error"
             });
         }
         if(results[0]['st_id']!=id){
-            return res.status(200).json({
+            return res.status(404).json({
                 msg :"Invalid Student Id"
             });
         }
@@ -228,7 +272,7 @@ exports.findStudentResults = (req,res) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
-                res.status(404).json({
+                res.status(400).json({
                     msg: "Falied to get results"
                 });
             }  

@@ -1,5 +1,5 @@
 const initState = {
-    
+    id: null
 }
 
 const adminReducer = (state = initState,action) => {
@@ -9,4 +9,4 @@ const adminReducer = (state = initState,action) => {
 
 }
 
-module.exports = adminReducer;
+export default adminReducer;
