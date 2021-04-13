@@ -14,6 +14,7 @@ const con = require('./models/db');
 app.use('/api/auth/',require('./routes/authRoutes'));
 app.use('/api/student/',require('./routes/studentRoutes'));
 app.use('/api/admin/',require('./routes/adminRoutes'));
+app.use('/api/invigilator/',require('./routes/invigilatorRoutes'));
 
 // Run the port on 4000
 
