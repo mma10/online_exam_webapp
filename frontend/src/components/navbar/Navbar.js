@@ -91,8 +91,8 @@ class navbar extends Component{
                 { this.props.admin.id ? adminInfo : null }
                 { this.props.management.id ? managementInfo : null }
 
-                <NavLink to = "/logout">
-                    <span>LOGOUT</span>
+                <NavLink to = "/login">
+                    <Logout />
                 </NavLink>
             </div>
         );

@@ -1,13 +1,14 @@
+// Conatains exam list
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 
-import {  } from '../../store/actions/adminActions';
+import { findInvigilationSubjects  } from '../../store/actions/adminActions';
 
 class admin extends Component{
     componentDidMount(){
-        // Call getAdminSubjects action
-
+        // Get invilgilation data of admin
+        this.props.findInvigilationSubjects();
     }
 
     static propTypes = {
@@ -15,7 +16,7 @@ class admin extends Component{
     }
 
     render(){
-
+        // Display subjects to be invililated
         return(
             <div className = "">
                 
@@ -32,4 +33,4 @@ const mapStateToProps = (state) => {
     });
 }
 
-export default connect(mapStateToProps,{  })(admin);
+export default connect(mapStateToProps,{ findInvigilationSubjects })(admin);

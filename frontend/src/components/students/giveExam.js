@@ -19,7 +19,7 @@ class student extends Component{
         this.props.showExamPaper();
 
         // Store the responses in browser as localStorage and set the initial state
-
+        
         this.props.student.currentExam.questions.sort(function(a,b){
             if(a.qid <= b.qid)
                 return -1;

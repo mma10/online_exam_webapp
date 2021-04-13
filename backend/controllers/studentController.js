@@ -113,7 +113,7 @@ exports.findExamPaper = (req,res) => {
         // Check if the student have previously submitted the exam 
 
         var query1 = "SELECT * FROM student NATURAL JOIN result WHERE username = ? AND eid = ? AND year = 2021" // Set current year
-        sql.query(query1,[details['username'],examId],(err,result) => {
+        sql.query(query1,[[details['username'],examId]],(err,result) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
