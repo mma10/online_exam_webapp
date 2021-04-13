@@ -4,9 +4,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import propTypes from 'prop-types';
 
-import { showExamPaper } from '../../store/actions/studentActions';
+import { showStudentExams } from '../../store/actions/studentActions';
 
 class student extends Component{
+    componentDidMount(){
+        this.props.showStudentExams();
+    }
+
     static propTypes = {
         exams: propTypes.array.isRequired
     }
@@ -29,4 +33,4 @@ const mapStateToProps = (state) => {
     });
 }
 
-export default connect(mapStateToProps)(student);
+export default connect(mapStateToProps,{ showStudentExams })(student);

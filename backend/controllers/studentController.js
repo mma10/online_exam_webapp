@@ -82,6 +82,8 @@ exports.findStudentExams = (req,res) => {
 };
 
 exports.findExamPaper = (req,res) => {
+    // Chech authenticity
+
     var details=auth.checkAuth(req);
     if(!details) return res.redirect(base_url);
     if(details['actype']!='student'){
@@ -90,9 +92,11 @@ exports.findExamPaper = (req,res) => {
         });
     }
 
+    // Check if examId is valid
+
     var examId = parseInt(req.params.exam_id);
-    var query1="select * from exam where eid = '" + examId + "'";        
-    sql.query(query1, (err, result) => {
+    var query1 = "SELECT * FROM exam WHERE eid = ?";    
+    sql.query(query1,[examId],(err, result) => {
         if(err){
             sql=require('../models/db');
             console.log(err);
@@ -105,7 +109,26 @@ exports.findExamPaper = (req,res) => {
                 msg :"Invalid Exam Id"
             });
         }
+        
+        // Check if the student have previously submitted the exam 
 
+        var query1 = "SELECT * FROM student NATURAL JOIN result WHERE username = ? AND eid = ? AND year = 2021" // Set current year
+        sql.query(query1,[details['username'],examId],(err,result) => {
+            if(err){
+                sql=require('../models/db');
+                console.log(err);
+                return res.status(400).json({
+                    msg :"Error"
+                });
+            }
+            if(result[0])
+                res.status(404).json({
+                    msg: "YOU HAVE ALREADY SUBMITTED THE EXAM"
+                });
+        })
+
+        // Get and send the examPaper
+        
         var examDetails = result;
         var query = "SELECT * from question WHERE eid = ?"
         sql.query(query,[examId],(err,result) => {
