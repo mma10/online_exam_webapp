@@ -27,7 +27,7 @@ exports.findStudentSubjects = (req,res) => {
                 msg :"Invalid Student Id"
             });
         }
-        var query = "SELECT sub_id, name FROM subject WHERE sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
+        var query = "SELECT s.sub_id, s.name as sub_name, a.name as admin_name FROM subject s, adminsubject a_s, admin a WHERE s.sub_id = a_s.sub_id and a_s.ad_id = a.ad_id and s.sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
         sql.query(query,[id],(err, result) => {
             if(err){
                 sql=require('../models/db');
@@ -121,7 +121,7 @@ exports.findExamPaper = (req,res) => {
                     msg :"Error"
                 });
             }
-            if(result[0])
+            if(result.length > 0)
                 res.status(404).json({
                     msg: "YOU HAVE ALREADY SUBMITTED THE EXAM"
                 });
