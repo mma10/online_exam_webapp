@@ -1,0 +1,13 @@
+.active{
+  background:whitesmoke;
+}
+
+.navbar{
+  background-color: rgba(0, 0, 0, 0.37);
+}
+
+.nav-item .nav-link{
+  color: black;
+  font-weight: 500;
+  padding: 12px;
+}

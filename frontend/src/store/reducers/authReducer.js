@@ -1,8 +1,8 @@
 const initState = {
-    id: null,
-    type: null,
-    loggedIn: null,
-    name: null,
+    id: 201,
+    type: "student",
+    loggedIn: true,
+    name: "ANUJ",
 }
 
 const authReducer = (state = initState,action) => {

@@ -3,6 +3,7 @@ import adminReducer from './adminReducer';
 import studentReducer from './studentReducer';
 import errorReducer from './errorReducer';
 import invigilatorReducer from './invigilatorReducer';
+import managementReducer from './managementReducer';
 import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers({
@@ -10,7 +11,8 @@ const rootReducer = combineReducers({
     error: errorReducer,
     student: studentReducer,
     admin: adminReducer,
-    invigilator: invigilatorReducer
+    invigilator: invigilatorReducer,
+    management: managementReducer
 });
 
 export default rootReducer;

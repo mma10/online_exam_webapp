@@ -28,7 +28,7 @@ exports.showStudentExams = id => dispatch => {
             payload: res.data
         });
     })
-    .catch(res => {
+    .catch(err => {
         dispatch({
             type: 'GET_ERROR',
             payload: {
@@ -60,7 +60,7 @@ exports.showExamPaper = examId => dispatch => {
     })
 }
 
-exports.submitStudentExam = (examId,studentId,examBody) => dipatch => {
+exports.submitStudentExam = (examId,studentId,examBody) => dispatch => {
     axios.post('/api/student/${examId}/${studentId}/exam',examBody)
     .then(res => {
         if(res.status == 200){
@@ -84,7 +84,7 @@ exports.submitStudentExam = (examId,studentId,examBody) => dipatch => {
     })
 }
 
-exports.showStudentResults = id => dispatch => {
+exports.getStudentResults = id => dispatch => {
     axios.get('/api/student/${id}/results')
     .then(res => {
         dispatch({

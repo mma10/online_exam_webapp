@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import propTypes from 'prop-types';
 
+import '../../styles/navbar.css'
+
 import Logout from '../auth/logout';
 import logout from '../../store/actions/authActions';
 
@@ -12,53 +14,17 @@ class navbar extends Component{
     }
 
     render(){
-        const studentLinks = (
-            <div className = "">
-                <NavLink to = "/student/subjects">
-                    <span>REGISTERED SUBJECTS</span>
-                </NavLink>
+        // Auth links
 
-                <NavLink to = "/student/exams">
-                    <span>EXAMS</span>
-                </NavLink>  
-
-                <NavLink to = "/student/results">
-                    <span>RESULTS</span>
-                </NavLink>
-            </div>
-        );
-        const adminLinks = (
-            <div className = "">
-                <NavLink to = "/admin/subjects">
-                    <span>SUBJECTS UNDERTAKEN</span>
-                </NavLink>
-
-                <NavLink to = "/admin/studentInfo">
-                    <span>STUDENTS</span>
-                </NavLink>  
-
-                <NavLink to = "/student/setExam">
-                    <span>SET EXAM</span>
-                </NavLink>
-            </div>
-        );
-        const managementLinks = (
-            <div className = "">
-                <NavLink to = "/management/exams">
-                    <span>EXAMS</span>
-                </NavLink>
-
-                <NavLink to = "/management/students">
-                    <span>STUDENTS</span>
-                </NavLink>  
-
-                <NavLink to = "/management/admins">
-                    <span>STAFF</span>
+        const guestLinks = (
+            <div className = "navbar-nav ml-auto">
+                <NavLink to = "/login" className = " nav-link">
+                    <span>LOGIN</span>
                 </NavLink>
             </div>
         );
 
-        //
+        // Info variables
 
         const studentInfo = (
             <div>
@@ -84,37 +50,93 @@ class navbar extends Component{
             </div>
         );
 
-        const authLinks = (
-            <div className = "">
+        // NavLinks 
 
-                { this.props.student.id ? studentInfo : null }
-                { this.props.admin.id ? adminInfo : null }
-                { this.props.management.id ? managementInfo : null }
+        const studentLinks = (
+            <ul className = "navbar-nav ml-auto">
+                <li className = "nav-item">
+                <NavLink to = "/student/subjects" className = " nav-link">
+                    <span>REGISTERED SUBJECTS</span>
+                </NavLink>
+                </li>
 
-                <NavLink to = "/login">
+                <li className = "nav-item">
+                <NavLink to = "/student/exams" className = " nav-link">
+                    <span>EXAMS</span>
+                </NavLink> 
+                </li>
+
+                <li className = "nav-item">
+                <NavLink to = "/student/results" className = " nav-link">
+                    <span>RESULTS</span>
+                </NavLink>
+                </li>
+
+                <li className = "nav-item">                    
+                <NavLink to = "/login" className = " nav-link">
                     <Logout />
                 </NavLink>
-            </div>
+                </li>                                                
+            </ul>
         );
-        const guestLinks = (
-            <div className = "">
-                <NavLink to = "/login">
-                    <span>LOGIN</span>
+        const adminLinks = (
+            <ul className = "navbar-nav ml-auto">
+                <li className = "nav-item">
+                    <NavLink to = "/admin/subjects" className = " nav-link">
+                        <span>SUBJECTS UNDERTAKEN</span>
+                    </NavLink>
+                </li>
+                    
+                <li className = "nav-item">
+                    <NavLink to = "/admin/studentInfo" className = " nav-link">
+                        <span>STUDENTS</span>
+                    </NavLink> 
+                </li>
+
+                <li className = "nav-item">
+                    <NavLink to = "/student/setExam" className = " nav-link">
+                        <span>SET EXAM</span>
+                    </NavLink>
+                </li >
+
+                <li className = "nav-item">
+                    <NavLink to = "/login" className = " nav-link">
+                        <Logout />
+                    </NavLink>
+                </li>                                       
+                { adminInfo }                
+            </ul>
+        );
+        const managementLinks = (
+            <div className = "navbar-nav ml-auto">
+                <NavLink to = "/management/exams" className = " nav-link">
+                    <span>EXAMS</span>
+                </NavLink>
+
+                <NavLink to = "/management/students" className = " nav-link">
+                    <span>STUDENTS</span>
+                </NavLink>  
+
+                <NavLink to = "/management/admins" className = " nav-link">
+                    <span>STAFF</span>
+                </NavLink>
+
+                { managementInfo }
+
+                <NavLink to = "/login" className = " nav-link">
+                    <Logout />
                 </NavLink>
             </div>
         );
 
         return(
-            <div>
-                <p>navbar</p>
+            <nav className = "navbar navbar-expand-lg pt-1 pb-1">            
+                { this.props.auth.type == "student" ? studentLinks : null }
+                { this.props.auth.type == "admin" ? adminLinks : null }
+                { this.props.auth.type == "management" ? managementLinks : null }
 
-                { this.props.student.id ? studentLinks : null }
-                { this.props.admin.id ? adminLinks : null }
-                { this.props.management.id ? managementLinks : null }
-
-                { this.props.auth.status ? authLinks : guestLinks }
-                
-            </div>
+                { !this.props.auth.loggedIn ? guestLinks : null }                
+            </nav>
         );
     }
 }
