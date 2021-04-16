@@ -137,7 +137,7 @@ class navbar extends Component{
         );
 
         return(
-            <nav className = "navbar navbar-expand-lg pt-1 pb-1">            
+            <nav className = "navbar navbar-expand-lg pt-1 pb-1 sticky-top">            
                 { this.props.auth.type == "student" ? studentLinks : null }
                 { this.props.auth.type == "admin" ? adminLinks : null }
                 { this.props.auth.type == "management" ? managementLinks : null }

@@ -30,28 +30,30 @@ class student extends Component{
 
             return(
                 <div className = "col-lg-3 col-md-4 col-sm-6 pt-3 pb-3">
-                    <div className = "card">
-                        <div className = "card-block">
+                    <div className = "card">                        
                             <div className = "card-header">
                                 <h5>{ exam.name }</h5>
                             </div>
-                            <div className = "card-body">
-                                <div className = "card-title">
-                                    <h6>SUBJECT ID: { exam.sub_id }</h6>
-                                </div>
-                                <div className = "card-text">     
-                                    <h6>ON: { moment(examDate).format('DD MMMM YYYY') }</h6>                       
-                                    <p>TIMINGS: { startTime } { " " } TO { " " } { endTime }</p>                          
-                                    <Link className = "" to = "/student/giveExam">
-                                        TAKE EXAM                       
-                                    </Link>
+                            <div className = "card-block">
+                                <div className = "card-body">
+                                    <div className = "card-title">
+                                        <h6>SUBJECT ID: { exam.sub_id }</h6>
+                                    </div>
+                                    <div className = "card-text">     
+                                        <h6>ON: { moment(examDate).format('DD MMMM YYYY') }</h6>                       
+                                        <p>TIMINGS: { startTime } { " " } TO { " " } { endTime }</p> 
+                                        <Link className = "text-white" to = "/student/giveExam">
+                                            <button className = "btn btn-primary">
+                                                <span>TAKE EXAM</span> 
+                                            </button>                     
+                                        </Link>                                                               
+                                    </div>
                                 </div>
                             </div>
                             <div className = "card-footer">
                                 <p className = "text-muted">DURATION: { /*endTime - startTime*/ }</p>
                             </div>
-                        </div>                                        
-                    </div>
+                        </div>                                                               
                 </div>                
             )
         })
