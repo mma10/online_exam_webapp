@@ -32,9 +32,9 @@ class student extends Component{
                 <div className = "col-lg-3 col-md-4 col-sm-6 pt-3 pb-3">
                     <div className = "card">                        
                             <div className = "card-header">
-                                <h5>{ exam.name }</h5>
+                                <large className = "font-weight-bold">{ exam.name }</large>
                             </div>
-                            <div className = "card-block">
+                            <div className = "card-block text-muted">
                                 <div className = "card-body">
                                     <div className = "card-title">
                                         <h6>SUBJECT ID: { exam.sub_id }</h6>
@@ -64,7 +64,7 @@ class student extends Component{
                     <span><br/>NAME: { this.props.student.name }</span><br/>
                     <span>CLASS: { this.props.student.class }</span>
                     <div className = "text-center">                        
-                        <h4>UPCOMMING EXAMS </h4><br/>
+                        <h4>EXAMS </h4><br/>
                     </div>                    
                 </header>
 

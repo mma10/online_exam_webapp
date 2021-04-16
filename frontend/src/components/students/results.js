@@ -4,6 +4,8 @@ import propTypes from 'prop-types';
 import $ from 'jquery';
 import { addTableClass } from '../../jquery/students/resultsJQ'
 
+import '../../styles/results.css';
+
 import { getStudentResults } from '../../store/actions/studentActions';
 
 class student extends Component{
@@ -61,8 +63,8 @@ class student extends Component{
                 <div>
                     <div className = "card bg-light border-light" key = { year } id = { year.toString() }>
                         <div className = "tableHeader card-header text-left">
-                            <span className = "class">CLASS: { Class }</span><br/>
-                            <span className = "year">YEAR: { year }</span>
+                            <span className = "tableClass">CLASS: { Class }</span><br/>
+                            <span className = "tableYear">YEAR: { year }</span>
                         </div>
                         <br/>
 

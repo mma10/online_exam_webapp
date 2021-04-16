@@ -95,7 +95,7 @@ exports.findExamPaper = (req,res) => {
     // Check if examId is valid
 
     var examId = parseInt(req.params.exam_id);
-    var query1 = "SELECT * FROM exam WHERE eid = ?";    
+    var query1 = "SELECT * FROM exam NATURAL JOIN subject WHERE eid = ?";    
     sql.query(query1,[examId],(err, result) => {
         if(err){
             sql=require('../models/db');
@@ -109,10 +109,12 @@ exports.findExamPaper = (req,res) => {
                 msg :"Invalid Exam Id"
             });
         }
+        var examDetails = result;
         
         // Check if the student have previously submitted the exam 
 
-        var query1 = "SELECT * FROM student NATURAL JOIN result WHERE username = ? AND eid = ? AND year = 2021" // Set current year
+        var currentYear = new Date().getFullYear();
+        var query1 = "SELECT * FROM student NATURAL JOIN result WHERE username = ? AND eid = ? AND year = ${ currentYear }" // Set current year
         sql.query(query1,[[details['username'],examId]],(err,result) => {
             if(err){
                 sql=require('../models/db');
@@ -125,26 +127,29 @@ exports.findExamPaper = (req,res) => {
                 res.status(404).json({
                     msg: "YOU HAVE ALREADY SUBMITTED THE EXAM"
                 });
+
+            // Get and send the examPaper
+                    
+            var query = "SELECT * from question WHERE eid = ?"
+            sql.query(query,[examId],(err,result) => {
+                if(err){
+                    sql=require('../models/db');
+                    console.log(err);
+                    return res.status(400).json({
+                        msg :"Error"
+                    });
+                }
+                res.status(200).json({
+                    examDetails,
+                    questions: result
+                });
+            });
+    });
+
+
         })
 
-        // Get and send the examPaper
         
-        var examDetails = result;
-        var query = "SELECT * from question WHERE eid = ?"
-        sql.query(query,[examId],(err,result) => {
-            if(err){
-                sql=require('../models/db');
-                console.log(err);
-                return res.status(400).json({
-                    msg :"Error"
-                });
-            }
-            res.status(200).json({
-                examDetails,
-                questions: result
-            });
-        });
-    });
 }
 
 exports.submitStudentExam = (req,res) => {

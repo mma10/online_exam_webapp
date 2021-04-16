@@ -9,15 +9,31 @@ const initState = {
         {sub_id: 3, sub_name: "ENGLISH3", admin_name: "AKSHAY3"}
     ],
     exams: [
-        {sub_id: 1, start_time: "2000/01/01 12:00:00", end_time:  "2000/01/01 15:00:0", name: "ENGLISH6",},
-        {sub_id: 2, start_time: "2000/01/02 12:00:00", end_time:  "2000/01/02 15:00:0", name: "ENGLISH7"},
-        {sub_id: 3, start_time: "2000/01/03 12:00:00", end_time:  "2000/01/03 15:00:0", name: "ENGLISH8"},
-        {sub_id: 4, start_time: "2000/01/04 12:00:00", end_time:  "2000/01/04 15:00:0", name: "ENGLISH9"},
-        {sub_id: 5, start_time: "2000/01/05 12:00:00", end_time:  "2000/01/05 15:00:0", name: "ENGLISH10"},
-        {sub_id: 6, start_time: "2000/01/06 12:00:00", end_time:  "2000/01/06 15:00:0", name: "SCIENCE6"},
-        {sub_id: 7, start_time: "2000/01/07 12:00:00", end_time:  "2000/01/07 15:00:0", name: "ENGLISH11"}
+        {sub_id: 1, start_time: "2000/01/01 12:00:00", end_time:  "2000/01/01 15:00:00", name: "ENGLISH6",},
+        {sub_id: 2, start_time: "2000/01/02 12:00:00", end_time:  "2000/01/02 15:00:00", name: "ENGLISH7"},
+        {sub_id: 3, start_time: "2000/01/03 12:00:00", end_time:  "2000/01/03 15:00:00", name: "ENGLISH8"},
+        {sub_id: 4, start_time: "2000/01/04 12:00:00", end_time:  "2000/01/04 15:00:00", name: "ENGLISH9"},
+        {sub_id: 5, start_time: "2000/01/05 12:00:00", end_time:  "2000/01/05 15:00:00", name: "ENGLISH10"},
+        {sub_id: 6, start_time: "2000/01/06 12:00:00", end_time:  "2000/01/06 15:00:00", name: "SCIENCE6"},
+        {sub_id: 7, start_time: "2000/01/07 12:00:00", end_time:  "2000/01/07 15:00:00", name: "ENGLISH11"}
     ],
-    currentExam: null,
+    currentExam: {
+        examDetails: {
+            sub_id: "1", name: "ENGLISH1", max_marks: 100, passing_marks: 35, invigilator: "AKASH 1", end_time: "2021/04/30 18:26:00"
+        },
+        questions: [
+            { qid: 1, statement: "statement 1", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 2, statement: "statement 2", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 3, statement: "statement 3", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 4, statement: "statement 4", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 5, statement: "statement 5", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 6, statement: "statement 6", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 7, statement: "statement 7", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 8, statement: "statement 8", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 9, statement: "statement 9", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
+            { qid: 10, statement: "statement 10", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10}
+        ]
+    },
     examMsg: null,
     results: {
         years: [2018,2019,2020],

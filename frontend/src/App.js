@@ -6,6 +6,7 @@ import Navbar from '../src/components/navbar/Navbar'
 import student from '../src/components/students/student';
 import subjects from '../src/components/students/subjects';
 import results from '../src/components/students/results';
+import giveExam from '../src/components/students/giveExam';
 
 import { Route } from 'react-router-dom'
 
@@ -17,7 +18,7 @@ class App extends Component{
         {/* <Route exact path = "/login" component = { login }/>   */}
 
         <Route exact path = "/student/exams" component = { student }/>
-        {/* <Route exact path = "/student/giveExam" component = { giveExam }/> */}
+        <Route exact path = "/student/giveExam" component = { giveExam }/>
         <Route exact path = "/student/subjects" component = { subjects }/>        
         <Route exact path = "/student/results" component = { results }/>
 
