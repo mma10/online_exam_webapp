@@ -17,11 +17,13 @@ class navbar extends Component{
         // Auth links
 
         const guestLinks = (
-            <div className = "navbar-nav ml-auto">
-                <NavLink to = "/login" className = " nav-link">
-                    <span>LOGIN</span>
-                </NavLink>
-            </div>
+            <ul className = "navbar-nav ml-auto">
+                <li>
+                    <NavLink to = "/login" className = "nav-link">
+                        <span>LOGIN</span>
+                    </NavLink>
+                </li>
+            </ul>
         );
 
         // Info variables
@@ -51,82 +53,87 @@ class navbar extends Component{
         );
 
         // NavLinks 
-
+        
         const studentLinks = (
             <ul className = "navbar-nav ml-auto">
                 <li className = "nav-item">
-                <NavLink to = "/student/subjects" className = " nav-link">
-                    <span>REGISTERED SUBJECTS</span>
-                </NavLink>
+                    <NavLink to = "/student/subjects" className = "nav-link">
+                        <span>REGISTERED SUBJECTS</span>
+                    </NavLink>
                 </li>
 
                 <li className = "nav-item">
-                <NavLink to = "/student/exams" className = " nav-link">
-                    <span>EXAMS</span>
-                </NavLink> 
+                    <NavLink to = "/student/exams" className = "nav-link">
+                        <span>EXAMS</span>
+                    </NavLink> 
                 </li>
 
                 <li className = "nav-item">
-                <NavLink to = "/student/results" className = " nav-link">
-                    <span>RESULTS</span>
-                </NavLink>
-                </li>
+                    <NavLink to = "/student/results" className = "nav-link">
+                        <span>RESULTS</span>
+                    </NavLink>
+                </li>                                                              
 
                 <li className = "nav-item">                    
-                <NavLink to = "/login" className = " nav-link">
-                    <Logout />
-                </NavLink>
+                    <NavLink to = "/login" className = "nav-link">
+                        <Logout />
+                    </NavLink>
                 </li>                                                
-            </ul>
+            </ul>            
         );
         const adminLinks = (
             <ul className = "navbar-nav ml-auto">
                 <li className = "nav-item">
-                    <NavLink to = "/admin/subjects" className = " nav-link">
+                    <NavLink to = "/admin/subjects" className = "nav-link">
                         <span>SUBJECTS UNDERTAKEN</span>
                     </NavLink>
                 </li>
                     
                 <li className = "nav-item">
-                    <NavLink to = "/admin/studentInfo" className = " nav-link">
+                    <NavLink to = "/admin/studentInfo" className = "nav-link">
                         <span>STUDENTS</span>
                     </NavLink> 
                 </li>
 
                 <li className = "nav-item">
-                    <NavLink to = "/student/setExam" className = " nav-link">
+                    <NavLink to = "/student/setExam" className = "nav-link">
                         <span>SET EXAM</span>
                     </NavLink>
                 </li >
 
                 <li className = "nav-item">
-                    <NavLink to = "/login" className = " nav-link">
+                    <NavLink to = "/login" className = "nav-link">
                         <Logout />
                     </NavLink>
-                </li>                                       
-                { adminInfo }                
+                </li>                                               
             </ul>
         );
         const managementLinks = (
-            <div className = "navbar-nav ml-auto">
-                <NavLink to = "/management/exams" className = " nav-link">
-                    <span>EXAMS</span>
-                </NavLink>
+            <ul className = "navbar-nav ml-auto">
+                <li>
+                    <NavLink to = "/management/exams" className = "nav-link">
+                        <span>EXAMS</span>
+                    </NavLink>
+                </li>
 
-                <NavLink to = "/management/students" className = " nav-link">
-                    <span>STUDENTS</span>
-                </NavLink>  
+                <li>
+                    <NavLink to = "/management/students" className = "nav-link">
+                        <span>STUDENTS</span>
+                    </NavLink>
+                </li>
 
-                <NavLink to = "/management/admins" className = " nav-link">
-                    <span>STAFF</span>
-                </NavLink>
+                <li>
+                    <NavLink to = "/management/admins" className = "nav-link">
+                        <span>STAFF</span>
+                    </NavLink>
+                </li>
 
-                { managementInfo }
-
-                <NavLink to = "/login" className = " nav-link">
-                    <Logout />
-                </NavLink>
-            </div>
+                <li>
+                    <NavLink to = "/login" className = "nav-link">
+                        <Logout />
+                    </NavLink>
+                </li>
+            </ul>
         );
 
         return(

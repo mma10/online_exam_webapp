@@ -8,7 +8,15 @@ const initState = {
         {sub_id: 2, sub_name: "ENGLISH2", admin_name: "AKSHAY2"},
         {sub_id: 3, sub_name: "ENGLISH3", admin_name: "AKSHAY3"}
     ],
-    exams: null,
+    exams: [
+        {sub_id: 1, start_time: "2000/01/01 12:00:00", end_time:  "2000/01/01 15:00:0", name: "ENGLISH6",},
+        {sub_id: 2, start_time: "2000/01/02 12:00:00", end_time:  "2000/01/02 15:00:0", name: "ENGLISH7"},
+        {sub_id: 3, start_time: "2000/01/03 12:00:00", end_time:  "2000/01/03 15:00:0", name: "ENGLISH8"},
+        {sub_id: 4, start_time: "2000/01/04 12:00:00", end_time:  "2000/01/04 15:00:0", name: "ENGLISH9"},
+        {sub_id: 5, start_time: "2000/01/05 12:00:00", end_time:  "2000/01/05 15:00:0", name: "ENGLISH10"},
+        {sub_id: 6, start_time: "2000/01/06 12:00:00", end_time:  "2000/01/06 15:00:0", name: "SCIENCE6"},
+        {sub_id: 7, start_time: "2000/01/07 12:00:00", end_time:  "2000/01/07 15:00:0", name: "ENGLISH11"}
+    ],
     currentExam: null,
     examMsg: null,
     results: {
