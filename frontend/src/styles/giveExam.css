@@ -17,3 +17,11 @@ header{
 .questionIndex{
     font-weight: 600;
 }
+
+.questionStatement{
+    font-size: 1.2em;
+}
+
+.questionOptions{
+    font-size: 1.275em;
+}

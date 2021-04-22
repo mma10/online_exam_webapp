@@ -17,10 +17,11 @@ class student extends Component{
     }
 
     componentDidMount(){
-        // Get the question paper. Dont show if student have alrady submitted before - handled by backend
-        this.props.showExamPaper();
         if(!this.props.student.currentExam)
-            this.props.history.push('/student/exams');        
+            this.props.history.push('/student/exams');
+        // Get the question paper. Dont show if student have alrady submitted before - handled by backend
+        this.props.showExamPaper(this.props.student.curretnExam.examDetails.sub_id);
+               
         
 
         // Sort questions ordered by qid
@@ -111,13 +112,13 @@ class student extends Component{
                                     </span> 
                                 </div>
                                 
-                                <div className = "card-title">
+                                <div className = "card-title questionStatement">
                                     <p>
                                         <span className = "questionIndex">{ q.qid } { ". " }</span>
                                         { q.statement }
                                     </p>                            
                                 </div>
-                                <div id = { q.id } className = "card-body">
+                                <div id = { q.id } className = "card-body questionOptions">
                                     <div className = "row text-justify options">
                                         <div className = "col-lg-3 col-sm-6">                                            
                                             <input type = "radio" name = { q.qid } value = { q.op1 }/>
@@ -152,17 +153,19 @@ class student extends Component{
             });
         }
         
-        // Create countdown timer for the exam       
+        // Create countdown timer for the exam  
+
         var myFunc = setInterval(() => {
             var nowTime = new Date().getTime();
             var endTime = new Date(this.props.student.currentExam.examDetails.end_time).getTime();
             var timeLeft = endTime - nowTime;
             
+            var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            
-            console.log("state",this.state);
+
+            var dayString = days ? days + " days " : "";
 
             if (timeLeft <= 0) {     
                 clearInterval(myFunc);       
@@ -172,12 +175,9 @@ class student extends Component{
                 this.submitExam();
                 $('.timer').html(timer);
                 return;
-            }        
-
-            var timer = hours + " hrs " + minutes + " mins " + seconds + " secs";
-            $('.timer').html(timer);
-            
-
+            }      
+            var timer = dayString + hours + " hrs " + minutes + " mins " + seconds + " secs";
+            $('.timer').html(timer);           
         },1000);        
 
         return(

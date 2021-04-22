@@ -8,7 +8,7 @@ const moment = require('moment');
 
 class student extends Component{
     componentDidMount(){
-        this.props.showStudentExams();
+        this.props.showStudentExams(this.props.student.id);
     }
 
     static propTypes = {
@@ -27,6 +27,21 @@ class student extends Component{
 
             dateArray = exam.end_time.split(' ');
             endTime = dateArray[1];
+
+            // Set duration of exam
+            
+            var examStartTime = new Date(exam.start_time).getTime();
+            var examEndTime = new Date(exam.end_time).getTime();
+            
+            var durationTime = examEndTime - examStartTime;
+            var hours = Math.floor((durationTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((durationTime % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((durationTime % (1000 * 60)) / 1000);
+            
+            var secString =  seconds ? seconds + " secs " : "";
+            var minString = minutes ? minutes + " mins " : "";
+            var hourString = hours ? hours + " hrs " : "NULL";
+            var duration = hourString + minString + secString;
 
             return(
                 <div className = "col-lg-3 col-md-4 col-sm-6 pt-3 pb-3">
@@ -51,7 +66,7 @@ class student extends Component{
                                 </div>
                             </div>
                             <div className = "card-footer">
-                                <p className = "text-muted">DURATION: { /*endTime - startTime*/ }</p>
+                                <p className = "text-muted">DURATION: { duration }</p>
                             </div>
                         </div>                                                               
                 </div>                

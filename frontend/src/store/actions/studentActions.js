@@ -1,7 +1,19 @@
 const axios = require('axios');
+const proxy = "http://localhost:4000";
+
+const request = {
+    headers: {
+        'content-Type': 'application/json',
+        "Accept": "/",
+        "Cache-Control": "no-cache",
+        "cookie": document.cookie.split(";")[0]
+    }
+}
+console.log(request);
 
 exports.showStudentSubjects = id => dispatch => {
-    axios.get('/api/student/${id}/subjects')
+    console.log(id,"In showStudent action");
+    axios.get(proxy + '/api/student/' + id + '/subjects',request)
     .then(res => {
         dispatch({
             type: 'GET_STUDENT_SUBJECTS',
@@ -9,19 +21,21 @@ exports.showStudentSubjects = id => dispatch => {
         });
     })
     .catch(err => {
-        dispatch({
-            type: 'GET_ERROR',
-            payload: {
-                msg: err.response.data.msg,
-                status: err.response.status,
-                id: 'GET_STUDENT_SUBJECTS_FAILED'                
-            }
-        });
+        if(err.response){
+            dispatch({
+                type: 'GET_ERROR',
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'GET_STUDENT_SUBJECTS_FAILED'                
+                }
+            });
+        }        
     });
 }
 
 exports.showStudentExams = id => dispatch => {
-    axios.get('/api/student/${id}/exams')
+    axios.get(proxy + '/api/student/' + id +'/exams',request)
     .then(res => {
         dispatch({
             type: 'GET_STUDENT_EXAMS',
@@ -29,19 +43,22 @@ exports.showStudentExams = id => dispatch => {
         });
     })
     .catch(err => {
-        dispatch({
+        if(err.response){
+            dispatch({
             type: 'GET_ERROR',
-            payload: {
-                msg: err.response.data.msg,
-                status: err.response.status,
-                id: 'GET_STUDENT_EXAMS_FAILED'                
-            }
-        })
-    });
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'GET_STUDENT_EXAMS_FAILED'                
+                }
+            })
+
+       }
+            });
 }
 
 exports.showExamPaper = examId => dispatch => {
-    axios.get('/api/student/${examId}/exam')
+    axios.get(proxy + '/api/student/' + examId + '/exam',request)
     .then(res => {
         dispatch({
             type: 'DISPLAY_STUDENT_EXAM',
@@ -49,19 +66,22 @@ exports.showExamPaper = examId => dispatch => {
         });
     })
     .catch(err => {
-        dispatch({
+        if(err.response){
+            dispatch({
             type: 'GET_ERROR',
-            payload: {
-                msg: err.response.data.msg,
-                status: err.response.status,
-                id: 'DISPLAY_STUDENT_EXAM_FAILED'                
-            }
-        })
-    })
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'DISPLAY_STUDENT_EXAM_FAILED'                
+                }
+            })
+
+       }
+            })
 }
 
 exports.submitStudentExam = (examId,studentId,examBody) => dispatch => {
-    axios.post('/api/student/${examId}/${studentId}/exam',examBody)
+    axios.post(proxy + '/api/student/' + examId  + '/' + studentId + '/exam',examBody,request)
     .then(res => {
         if(res.status == 200){
             dispatch({
@@ -73,19 +93,22 @@ exports.submitStudentExam = (examId,studentId,examBody) => dispatch => {
         }
     })
     .catch(err => {
-        dispatch({
+        if(err.response){
+            dispatch({
             type: 'GET_ERROR',
-            payload: {
-                msg: err.response.data.msg,
-                status: err.response.status,
-                id: 'SUBMIT_STUDENT_EXAM_FAILED'                
-            }
-        })
-    })
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'SUBMIT_STUDENT_EXAM_FAILED'                
+                }
+            })
+
+       }
+            })
 }
 
 exports.getStudentResults = id => dispatch => {
-    axios.get('/api/student/${id}/results')
+    axios.get(proxy + '/api/student/' + id + '/results',request)
     .then(res => {
         dispatch({
             type: 'GET_STUDENT_RESULTS',
@@ -93,14 +116,17 @@ exports.getStudentResults = id => dispatch => {
         })
     })
     .catch(err => {
-        dispatch({
+        if(err.response){
+            dispatch({
             type: 'GET_ERROR',
-            payload: {
-                msg: err.response.data.msg,
-                status: err.response.status,
-                id: 'GET_STUDENT_RESULTS_FAILED'                
-            }
-        })
-    });
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'GET_STUDENT_RESULTS_FAILED'                
+                }
+            })
+
+       }
+            });
 }
 

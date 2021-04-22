@@ -6,7 +6,9 @@ import { showStudentSubjects } from '../../store/actions/studentActions';
 
 class student extends Component{
     componentDidMount(){
-        this.props.showStudentSubjects();
+        
+        console.log(document.cookie);
+        this.props.showStudentSubjects(this.props.student.id);
     }
 
     static propTypes = {
@@ -19,7 +21,7 @@ class student extends Component{
         var subjects = this.props.student.subjects;
         subjects = subjects && subjects.map((sub,i) => {
             return(
-                <tr>
+                <tr key = { sub.sub_id }>
                     <th scope="row">{ i+1 }</th>
                     <td>{ sub.sub_name }</td>
                     <td>{ sub.sub_id }</td>

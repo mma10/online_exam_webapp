@@ -5,7 +5,9 @@ const base_url='/api/auth/';
 exports.findStudentSubjects = (req,res) => {
     // Take student_id and find all corresponding registered subjects
     var details=auth.checkAuth(req);
-    if(!details) return res.redirect(base_url);
+    if(!details) return res.status(401).json({
+        msg: "Not Logged In"
+    });
     if(details['actype']!='student'){
         return res.status(200).json({
             msg :"You Don't Have Student Account"
@@ -27,7 +29,7 @@ exports.findStudentSubjects = (req,res) => {
                 msg :"Invalid Student Id"
             });
         }
-        var query = "SELECT s.sub_id, s.name as sub_name, a.name as admin_name FROM subject s, adminsubject a_s, admin a WHERE s.sub_id = a_s.sub_id and a_s.ad_id = a.ad_id and s.sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
+        var query = "SELECT s.sub_id, s.name as sub_name, a.name as admin_name FROM subject s, adminsub a_s, admin a WHERE s.sub_id = a_s.sub_id and a_s.ad_id = a.ad_id and s.sub_id = ANY(SELECT sub_id FROM registration WHERE st_id = ?)";
         sql.query(query,[id],(err, result) => {
             if(err){
                 sql=require('../models/db');
@@ -44,7 +46,9 @@ exports.findStudentSubjects = (req,res) => {
 exports.findStudentExams = (req,res) => {
     // Take student_id and find all corresponding exams
     var details=auth.checkAuth(req);
-    if(!details) return res.redirect(base_url);
+    if(!details) return res.status(401).json({
+        msg: "Not Logged In"
+    });
     if(details['actype']!='student'){
         return res.status(404).json({
             msg :"You Don't Have Student Account"
@@ -85,18 +89,20 @@ exports.findExamPaper = (req,res) => {
     // Chech authenticity
 
     var details=auth.checkAuth(req);
-    if(!details) return res.redirect(base_url);
+    if(!details) return res.status(401).json({
+        msg: "Not Logged In"
+    });
     if(details['actype']!='student'){
         return res.status(404).json({
             msg :"You Don't Have Student Account"
         });
     }
 
-    // Check if examId is valid
-
-    var examId = parseInt(req.params.exam_id);
-    var query1 = "SELECT * FROM exam NATURAL JOIN subject WHERE eid = ?";    
-    sql.query(query1,[examId],(err, result) => {
+    // Check if subjectId is valid and has the exam
+    
+    var subjectId = parseInt(req.params.subject_id);
+    var query1 = "SELECT * FROM subject NATURAL JOIN exam WHERE sub_id = ?";    
+    sql.query(query1,[subjectId],(err, result) => {
         if(err){
             sql=require('../models/db');
             console.log(err);
@@ -106,7 +112,7 @@ exports.findExamPaper = (req,res) => {
         }
         if(result.length <= 0){
             return res.status(404).json({
-                msg :"Invalid Exam Id"
+                msg :"Invalid Subject Id"
             });
         }
         var examDetails = result;
@@ -114,8 +120,9 @@ exports.findExamPaper = (req,res) => {
         // Check if the student have previously submitted the exam 
 
         var currentYear = new Date().getFullYear();
-        var query1 = "SELECT * FROM student NATURAL JOIN result WHERE username = ? AND eid = ? AND year = ${ currentYear }" // Set current year
-        sql.query(query1,[[details['username'],examId]],(err,result) => {
+        var query1 = "SELECT * FROM student NATURAL JOIN result WHERE uname = ? AND sub_id = ? AND year = ?" // Set current year
+        console.log()
+        sql.query(query1,[details['uname'],subjectId,currentYear],(err,result) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
@@ -124,14 +131,14 @@ exports.findExamPaper = (req,res) => {
                 });
             }
             if(result.length > 0)
-                res.status(404).json({
+                return res.status(404).json({
                     msg: "YOU HAVE ALREADY SUBMITTED THE EXAM"
                 });
 
             // Get and send the examPaper
                     
-            var query = "SELECT * from question WHERE eid = ?"
-            sql.query(query,[examId],(err,result) => {
+            var query = "SELECT * from question WHERE sub_id = ?"
+            sql.query(query,[subjectId],(err,result) => {
                 if(err){
                     sql=require('../models/db');
                     console.log(err);
@@ -144,12 +151,8 @@ exports.findExamPaper = (req,res) => {
                     questions: result
                 });
             });
-    });
-
-
-        })
-
-        
+        });
+    });        
 }
 
 exports.submitStudentExam = (req,res) => {
@@ -162,7 +165,9 @@ exports.submitStudentExam = (req,res) => {
     // }
 
     var details=auth.checkAuth(req);
-    if(!details) return res.redirect(base_url);
+    if(!details) return res.status(401).json({
+        msg: "Not Logged In"
+    });
     if(details['actype']!='student'){
         return res.status(404).json({
             msg :"You Don't Have Student Account"
@@ -273,7 +278,9 @@ exports.submitStudentExam = (req,res) => {
 exports.findStudentResults = (req,res) => {
     // Find the results of the student
     var details=auth.checkAuth(req);
-    if(!details) return res.redirect(base_url);
+    if(!details) return res.status(401).json({
+        msg: "Not Logged In"
+    });
     if(details['actype']!='student'){
         return res.status(404).json({
             msg :"You Don't Have Student Account"

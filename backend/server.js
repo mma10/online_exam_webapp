@@ -3,11 +3,18 @@ const cors = require('cors');
 
 const app = express();
 app.use(express.json());
-// const mysql = require('mysql');
 
 // Connect to MySQL
 
 const con = require('./models/db');
+const myFunc = setInterval(() => {
+    // Write dummy query
+
+    const uname = "himanshu";
+    con.query("SELECT * from management where uname = ?",[uname]);
+},5000);
+
+app.use(cors());
 
 // APIs
 

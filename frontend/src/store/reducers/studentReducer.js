@@ -19,7 +19,7 @@ const initState = {
     ],
     currentExam: {
         examDetails: {
-            sub_id: "1", name: "ENGLISH1", max_marks: 100, passing_marks: 35, invigilator: "AKASH 1", end_time: "2021/04/30 18:26:00"
+            sub_id: 1, name: "ENGLISH1", max_marks: 100, passing_marks: 35, invigilator: "AKASH 1", end_time: "2021/04/30 18:26:00"
         },
         questions: [
             { qid: 1, statement: "statement 1", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},

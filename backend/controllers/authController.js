@@ -15,6 +15,7 @@ function makeid(length) {
 }
 
 function parseCookies (request) {
+  console.log(request.headers,"headers");
   var list = {},rc = request.headers.cookie;
   rc && rc.split(';').forEach(function( cookie ) {
       var parts = cookie.split('=');
@@ -32,13 +33,13 @@ exports.createToken=(request, response)=>{
       response.cookie('token',id);
       console.log(id);
       users[id]={"logged_in":false};
-      response.redirect(base_url+'login/');
+      response.send("Please login now");
     }
     else if(users[token]["logged_in"] == true){
       response.send("Already logged in");
     }
     else
-      response.redirect(base_url+'login/'); 
+      response.send("Please login"); 
 }
 
 exports.loginPage=(request, response)=>{

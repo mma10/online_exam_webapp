@@ -9,8 +9,13 @@ import results from '../src/components/students/results';
 import giveExam from '../src/components/students/giveExam';
 
 import { Route } from 'react-router-dom'
+import axios from 'axios';
 
 class App extends Component{
+  componentDidMount(){
+    axios.get("http://localhost:4000/api/auth");
+  }
+
   render(){
     return (
       <div className = "App">
