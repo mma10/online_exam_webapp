@@ -8,14 +8,10 @@ const initState = {
         {sub_id: 2, sub_name: "ENGLISH2", admin_name: "AKSHAY2"},
         {sub_id: 3, sub_name: "ENGLISH3", admin_name: "AKSHAY3"}
     ],
-    exams: [
-        {sub_id: 1, start_time: "2000/01/01 12:00:00", end_time:  "2000/01/01 15:00:00", name: "ENGLISH6",},
-        {sub_id: 2, start_time: "2000/01/02 12:00:00", end_time:  "2000/01/02 15:00:00", name: "ENGLISH7"},
-        {sub_id: 3, start_time: "2000/01/03 12:00:00", end_time:  "2000/01/03 15:00:00", name: "ENGLISH8"},
-        {sub_id: 4, start_time: "2000/01/04 12:00:00", end_time:  "2000/01/04 15:00:00", name: "ENGLISH9"},
-        {sub_id: 5, start_time: "2000/01/05 12:00:00", end_time:  "2000/01/05 15:00:00", name: "ENGLISH10"},
-        {sub_id: 6, start_time: "2000/01/06 12:00:00", end_time:  "2000/01/06 15:00:00", name: "SCIENCE6"},
-        {sub_id: 7, start_time: "2000/01/07 12:00:00", end_time:  "2000/01/07 15:00:00", name: "ENGLISH11"}
+    exams:[
+        {"sub_id":1,"eid":1,"start_time":"2015-12-31T18:30:01.000Z","end_time":"2015-12-31T21:30:01.000Z","max_marks":100,"passing_marks":35,"name":"maths 1","class":null},
+        {"sub_id":2,"eid":2,"start_time":"2016-01-01T18:30:01.000Z","end_time":"2016-01-01T21:30:01.000Z","max_marks":100,"passing_marks":40,"name":"maths 2","class":null},
+        {"sub_id":3,"eid":3,"start_time":"2016-01-02T18:30:01.000Z","end_time":"2016-01-02T21:30:01.000Z","max_marks":100,"passing_marks":30,"name":"maths 3","class":null}
     ],
     currentExam: {
         examDetails: {
@@ -96,6 +92,20 @@ const studentReducer = (state = initState,action) => {
                 ...state,
                 results: action.payload
             });
+
+        case 'CLEAR_STUDENT':
+            return{
+                ...state,
+                id: null,
+                name: null,
+                rollNo: null,
+                class: null,
+                subjects: null,
+                exams: null,
+                currentExam: null,
+                exmMsg: null,
+                results: null
+            }
 
         default: return state;
     }

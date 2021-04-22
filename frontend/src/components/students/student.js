@@ -4,15 +4,20 @@ import { Link } from 'react-router-dom';
 import propTypes from 'prop-types';
 
 import { showStudentExams } from '../../store/actions/studentActions';
+
 const moment = require('moment');
 
-class student extends Component{
+class student extends Component{   
     componentDidMount(){
+        if(this.props.auth != "student")
+            this.props.history.push('/');
+            
         this.props.showStudentExams(this.props.student.id);
     }
 
     static propTypes = {
-        student: propTypes.object.isRequired
+        student: propTypes.object.isRequired,
+        auth: propTypes.object.isRequired
     }
 
     render(){
@@ -21,12 +26,12 @@ class student extends Component{
         exams = exams && exams.map(exam => {
             // Convert to date and time 
 
-            var dateArray = exam.start_time.split(' ');
-            examDate = dateArray[0];
-            startTime = dateArray[1];
+            var dateArray = exam.start_time.split('T');
+            examDate = exam.start_time;
+            startTime = dateArray[1].split('.')[0];
 
-            dateArray = exam.end_time.split(' ');
-            endTime = dateArray[1];
+            dateArray = exam.end_time.split('T');
+            endTime = dateArray[1].split('.')[0];
 
             // Set duration of exam
             
@@ -40,7 +45,7 @@ class student extends Component{
             
             var secString =  seconds ? seconds + " secs " : "";
             var minString = minutes ? minutes + " mins " : "";
-            var hourString = hours ? hours + " hrs " : "NULL";
+            var hourString = hours ? hours + " hrs " : "";
             var duration = hourString + minString + secString;
 
             return(
@@ -49,7 +54,7 @@ class student extends Component{
                             <div className = "card-header">
                                 <large className = "font-weight-bold">{ exam.name }</large>
                             </div>
-                            <div className = "card-block text-muted">
+                            <div className = "text-muted">
                                 <div className = "card-body">
                                     <div className = "card-title">
                                         <h6>SUBJECT ID: { exam.sub_id }</h6>
@@ -98,7 +103,8 @@ class student extends Component{
 
 const mapStateToProps = (state) => {
     return({
-        student: state.student
+        student: state.student,
+        auth: state.auth
     });
 }
 

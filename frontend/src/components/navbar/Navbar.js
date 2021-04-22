@@ -18,7 +18,7 @@ class navbar extends Component{
 
         const guestLinks = (
             <ul className = "navbar-nav ml-auto">
-                <li>
+                <li className = "nav-item">
                     <NavLink to = "/login" className = "nav-link">
                         <span>LOGIN</span>
                     </NavLink>
@@ -110,37 +110,47 @@ class navbar extends Component{
         );
         const managementLinks = (
             <ul className = "navbar-nav ml-auto">
-                <li>
+                <li className = "nav-item">
                     <NavLink to = "/management/exams" className = "nav-link">
                         <span>EXAMS</span>
                     </NavLink>
                 </li>
 
-                <li>
+                <li className = "nav-item">
                     <NavLink to = "/management/students" className = "nav-link">
                         <span>STUDENTS</span>
                     </NavLink>
                 </li>
 
-                <li>
+                <li className = "nav-item">
                     <NavLink to = "/management/admins" className = "nav-link">
                         <span>STAFF</span>
                     </NavLink>
                 </li>
 
-                <li>
+                <li className = "nav-item">
                     <NavLink to = "/login" className = "nav-link">
                         <Logout />
                     </NavLink>
                 </li>
             </ul>
         );
+        const invigilatorLinks = (
+            <ul className = "navbar-nav ml-auto">                
+                <li className = "nav-item">
+                    <NavLink to = "/login" className = "nav-link">
+                        <Logout />
+                    </NavLink>
+                </li>
+            </ul>
+        )
 
         return(
             <nav className = "navbar navbar-expand-lg pt-1 pb-1 sticky-top">            
                 { this.props.auth.type == "student" ? studentLinks : null }
                 { this.props.auth.type == "admin" ? adminLinks : null }
                 { this.props.auth.type == "management" ? managementLinks : null }
+                { this.props.auth.type == "invigilator" ? invigilatorLinks : null } 
 
                 { !this.props.auth.loggedIn ? guestLinks : null }                
             </nav>

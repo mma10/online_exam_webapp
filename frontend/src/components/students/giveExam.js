@@ -9,6 +9,7 @@ import { showExamPaper,submitStudentExam } from '../../store/actions/studentActi
 class student extends Component{
     static propTypes = {
         student: propTypes.object.isRequired,
+        auth: propTypes.object.isRequired,
         error: propTypes.object.isRequired
     }
 
@@ -17,6 +18,9 @@ class student extends Component{
     }
 
     componentDidMount(){
+        if(this.props.auth != "student")
+            this.props.history.push('/');
+
         if(!this.props.student.currentExam)
             this.props.history.push('/student/exams');
         // Get the question paper. Dont show if student have alrady submitted before - handled by backend
@@ -225,7 +229,8 @@ class student extends Component{
 const mapStateToProps = (state) => {
     return({
         student: state.student,
-        error: state.error
+        error: state.error,
+        auth: state.auth
     });
 }
 

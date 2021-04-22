@@ -9,7 +9,7 @@ class Logout extends Component{
         logout: propTypes.func.isRequired
     }
 
-    logout(){
+    logout = () => {
         this.props.logout();
     }
 

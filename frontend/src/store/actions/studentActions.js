@@ -3,13 +3,9 @@ const proxy = "http://localhost:4000";
 
 const request = {
     headers: {
-        'content-Type': 'application/json',
-        "Accept": "/",
-        "Cache-Control": "no-cache",
-        "cookie": document.cookie.split(";")[0]
+        
     }
 }
-console.log(request);
 
 exports.showStudentSubjects = id => dispatch => {
     console.log(id,"In showStudent action");

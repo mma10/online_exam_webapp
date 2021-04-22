@@ -33,7 +33,7 @@ exports.findInvigilatorExams = (req,res) => {
         
         // Send the exams of the respective invigilator
         
-        var query = "SELECT * FROM exam where eid IN (SELECT * from examinv WHERE inv_id = ?)";
+        var query = "SELECT * FROM exam NATURAL JOIN subject where eid IN (SELECT eid from examinv WHERE inv_id = ?)";
         sql.query(query,[id],(err,result) => {
             if(err){
                 sql=require('../models/db');

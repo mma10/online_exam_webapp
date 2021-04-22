@@ -1,7 +1,8 @@
 import axios from 'axios';
+const proxy = "http://localhost:4000";
 
-exports.getInvigilatorExams = id => dispatch => {
-    axios.get('/api/invigilator/${id}/exams')
+const getInvigilatorExams = id => dispatch => {
+    axios.get('${proxy}/api/invigilator/${id}/exams')
     .then(res => {
         dispatch({
             type: 'GET_INVIGILATOR_EXAMS',
@@ -19,4 +20,6 @@ exports.getInvigilatorExams = id => dispatch => {
         });
     });
 };
+
+export default getInvigilatorExams;
 

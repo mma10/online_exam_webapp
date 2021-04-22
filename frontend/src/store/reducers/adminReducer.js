@@ -4,6 +4,12 @@ const initState = {
 
 const adminReducer = (state = initState,action) => {
     switch(action.type){
+        case 'CLEAR_ADMIN':
+            return({
+                ...state,
+                id: null
+            })
+
         default: return state;
     }
 

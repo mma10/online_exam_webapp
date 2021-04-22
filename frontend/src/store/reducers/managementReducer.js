@@ -8,6 +8,16 @@ const initState = {
 
 const invigilatorReducer = (state = initState,action) => {
     switch(action.type){
+        case 'CLEAR_MANAGEMENT':
+            return({
+                ...state,
+                id: null,
+                name: null,
+                students: null,
+                admins: null,
+                exams: null
+            });
+
         default: return(state)
     }        
 };

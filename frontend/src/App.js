@@ -8,6 +8,8 @@ import subjects from '../src/components/students/subjects';
 import results from '../src/components/students/results';
 import giveExam from '../src/components/students/giveExam';
 
+import invigilator from '../src/components/invigilator/invigilator';
+
 import { Route } from 'react-router-dom'
 import axios from 'axios';
 
@@ -27,11 +29,11 @@ class App extends Component{
         <Route exact path = "/student/subjects" component = { subjects }/>        
         <Route exact path = "/student/results" component = { results }/>
 
-        {/* <Route exact path = "/admin" component = { admin }/>
-        <Route exact path = "/admin/setExam" component = { setExam }/>
-        <Route exact path = "/admin/studentResults_admin" component = { studentResults_admin }/>
+        {/* <Route exact path = "/admin" component = { admin }/> */}
+        {/* <Route exact path = "/admin/setExam" component = { setExam }/> */}
+        {/* <Route exact path = "/admin/studentResults_admin" component = { studentResults_admin }/> */}
 
-        <Route exact path = "/invigilator" component = { invigilator }/>    */}
+        <Route exact path = "/invigilator" component = { invigilator }/>   
       </div>
     );
   }

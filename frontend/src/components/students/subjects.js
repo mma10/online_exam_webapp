@@ -6,13 +6,16 @@ import { showStudentSubjects } from '../../store/actions/studentActions';
 
 class student extends Component{
     componentDidMount(){
+        if(this.props.auth != "student")
+            this.props.history.push('/');
         
         console.log(document.cookie);
         this.props.showStudentSubjects(this.props.student.id);
     }
 
     static propTypes = {
-        student: propTypes.object.isRequired
+        student: propTypes.object.isRequired,
+        auth: propTypes.object.isRequired
     }
 
     render(){
@@ -70,7 +73,8 @@ class student extends Component{
 
 const mapStateToProps = (state) => {
     return({
-        student: state.student
+        student: state.student,
+        auth: state.auth
     });
 }
 
