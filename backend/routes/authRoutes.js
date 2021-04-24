@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();;
 
-// Routes
-
 const auth = require('../controllers/authController');
 
 // Routes
 router.get('/', auth.createToken);
 
-router.get('/login/', auth.loginPage);
+router.get('/:token/', auth.createToken);
 
-router.post('/check/', auth.checkLogin);
+router.get('/login/:token/', auth.loginPage);
 
-router.get('/logout/', auth.logout);
+router.post('/check/:token/', auth.checkLogin);
+
+router.get('/logout/:token/', auth.logout);
+
 
 module.exports = router;

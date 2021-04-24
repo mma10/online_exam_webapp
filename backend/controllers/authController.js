@@ -14,38 +14,31 @@ function makeid(length) {
   return result;
 }
 
-function parseCookies (request) {
-  console.log(request.headers,"headers");
-  var list = {},rc = request.headers.cookie;
-  rc && rc.split(';').forEach(function( cookie ) {
-      var parts = cookie.split('=');
-      list[parts.shift().trim()] = decodeURI(parts.join('='));
-  });
-  return list;
-}
-
 exports.createToken=(request, response)=>{
-    var cookies=parseCookies(request);
-    var token=cookies['token'];
-    if(!token || !users[token]){
+    var token=String(request.params.token);
+    if(!token || token=="" || !users[token]){
       var id=makeid(idlen);
       while(users[id]) id=makeid(idlen);
-      response.cookie('token',id);
       console.log(id);
       users[id]={"logged_in":false};
-      response.send("Please login now");
+      response.status(200).json({
+        id:id
+      });
     }
     else if(users[token]["logged_in"] == true){
-      response.send("Already logged in");
+      response.json({
+        msg: "Already logged in"
+      });
     }
     else
-      response.send("Please login"); 
+      response.status(200).json({
+        msg:"Please Login"
+      });; 
 }
 
 exports.loginPage=(request, response)=>{
-    var cookies=parseCookies(request);
-    var token=cookies['token'];
-    if(!token || !users[token]) return response.redirect(base_url);
+    var token=String(request.params.token);
+    if(!token || token=="" || !users[token]) return response.redirect(base_url);
     if(!users[token]['logged_in']) return response.send('Please login through the form');
     else{
       return response.status(200).json({
@@ -55,9 +48,8 @@ exports.loginPage=(request, response)=>{
 }
 
 exports.checkLogin=(request, response)=>{
-    var cookies=parseCookies(request);
-    var token=cookies['token'];
-    if(!token || !users[token]) return response.redirect(base_url);
+    var token=String(request.params.token);
+    if(!token || token=="" || !users[token]) return response.redirect(base_url);
     if(users[token]["logged_in"]){
       return response.status(200).json({
         msg: "Already Logged In"
@@ -77,12 +69,12 @@ exports.checkLogin=(request, response)=>{
       if(err){
         sql=require('../models/db');
         console.log(err);
-        return response.status(200).json({
+        return response.status(400).json({
           msg :"Error"
         });
       }
       if(results.length<=0){
-        return response.status(200).json({
+        return response.status(404).json({
           msg :"Invalid Data"
         });
       }
@@ -96,9 +88,8 @@ exports.checkLogin=(request, response)=>{
 }
 
 exports.logout=(request,response)=>{
-    var cookies=parseCookies(request);
-    var token=cookies['token'];
-    if(!token || !users[token]) return response.redirect(base_url);
+    var token=String(request.params.token);
+    if(!token || token=="" || !users[token]) return response.redirect(base_url);
     if(users[token]["logged_in"]){
       response.clearCookie('token');
       delete(users.token);
@@ -106,16 +97,15 @@ exports.logout=(request,response)=>{
         msg :"Logged Out"
       });
     }
-    return response.status(200).json({
+    return response.status(400).json({
       msg :"Some Error Occured"
     });
 }
 
 
 exports.checkAuth=(request)=>{
-  var cookies=parseCookies(request);
-  var token=cookies['token'];
-  if(!token || !users[token]) return null;
+  var token=String(request.params.token);
+  if(!token || token=="" || !users[token]) return null;
   if(!users[token].logged_in) return null;
   return users[token];
 }

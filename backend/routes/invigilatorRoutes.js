@@ -5,6 +5,6 @@ const invigilator = require('../controllers/invigilatorController');
 
 // Routes
 
-router.get('/:invigilator_id/exams',invigilator.findInvigilatorExams);
+router.get('/:invigilator_id/exams/:token',invigilator.findInvigilatorExams);
 
 module.exports = router;
