@@ -7,18 +7,18 @@ import { showStudentExams } from '../../store/actions/studentActions';
 
 const moment = require('moment');
 
-class student extends Component{   
-    componentDidMount(){
-        if(this.props.auth != "student")
-            this.props.history.push('/');
-            
-        this.props.showStudentExams(this.props.student.id);
-    }
-
+class student extends Component{  
     static propTypes = {
         student: propTypes.object.isRequired,
         auth: propTypes.object.isRequired
     }
+
+    componentDidMount(){
+        if(this.props.auth.type != "student")
+            this.props.history.push('/');
+            
+        this.props.showStudentExams(this.props.student.id);
+    }    
 
     render(){
         var exams = this.props.student.exams;
@@ -49,7 +49,7 @@ class student extends Component{
             var duration = hourString + minString + secString;
 
             return(
-                <div className = "col-lg-3 col-md-4 col-sm-6 pt-3 pb-3">
+                <div className = "col-lg-3 col-md-4 col-sm-6 pt-3 pb-3" key = { exam.id }>
                     <div className = "card">                        
                             <div className = "card-header">
                                 <large className = "font-weight-bold">{ exam.name }</large>

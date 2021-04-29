@@ -6,9 +6,11 @@ exports.findInvigilatorExams = (req,res) => {
     // Check authenticity
 
     var details=auth.checkAuth(req);
-    if(!details) return res.redirect(base_url);
+    if(!details) return res.status(401).json({
+        msg: "No token"
+    });
     if(details['actype']!='invigilator'){
-        return res.status(404).json({
+        return res.status(401).json({
             msg :"You Don't Have Student Account"
         });
     }   

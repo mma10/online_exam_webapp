@@ -6,7 +6,7 @@ import propTypes from 'prop-types';
 import '../../styles/navbar.css'
 
 import Logout from '../auth/logout';
-import logout from '../../store/actions/authActions';
+import { logout } from '../../store/actions/authActions';
 
 class navbar extends Component{
     static propTypes = {
@@ -125,6 +125,12 @@ class navbar extends Component{
                 <li className = "nav-item">
                     <NavLink to = "/management/admins" className = "nav-link">
                         <span>STAFF</span>
+                    </NavLink>
+                </li>
+
+                <li className = "nav-item">
+                    <NavLink to = "/management/invigilators" className = "nav-link">
+                        <span>INVIGILATORS</span>
                     </NavLink>
                 </li>
 

@@ -18,13 +18,13 @@ class student extends Component{
     }
 
     componentDidMount(){
-        if(this.props.auth != "student")
+        if(this.props.auth.type != "student")
             this.props.history.push('/');
 
         if(!this.props.student.currentExam)
             this.props.history.push('/student/exams');
         // Get the question paper. Dont show if student have alrady submitted before - handled by backend
-        this.props.showExamPaper(this.props.student.curretnExam.examDetails.sub_id);
+        this.props.showExamPaper(this.props.student.currentExam.examDetails.sub_id);
                
         
 
@@ -92,7 +92,7 @@ class student extends Component{
         };
 
         this.props.submitStudentExam(examBody);
-        localStorage.removeItem('responses');
+        // localStorage.removeItem('responses');
 
         // Redirect to results page
         this.props.history.push('/student/results');

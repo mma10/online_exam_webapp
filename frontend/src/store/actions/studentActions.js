@@ -1,15 +1,10 @@
 const axios = require('axios');
 const proxy = "http://localhost:4000";
 
-const request = {
-    headers: {
-        
-    }
-}
-
-exports.showStudentSubjects = id => dispatch => {
+export const showStudentSubjects = id => dispatch => {
     console.log(id,"In showStudent action");
-    axios.get(proxy + '/api/student/' + id + '/subjects',request)
+    const token = localStorage.getItem('token');
+    axios.get(proxy + '/api/student/' + id + '/subjects/' + token)
     .then(res => {
         dispatch({
             type: 'GET_STUDENT_SUBJECTS',
@@ -30,8 +25,9 @@ exports.showStudentSubjects = id => dispatch => {
     });
 }
 
-exports.showStudentExams = id => dispatch => {
-    axios.get(proxy + '/api/student/' + id +'/exams',request)
+export const showStudentExams = id => dispatch => {
+    const token = localStorage.getItem('token');
+    axios.get(proxy + '/api/student/' + id +'/exams/' + token)
     .then(res => {
         dispatch({
             type: 'GET_STUDENT_EXAMS',
@@ -48,13 +44,13 @@ exports.showStudentExams = id => dispatch => {
                     id: 'GET_STUDENT_EXAMS_FAILED'                
                 }
             })
-
        }
-            });
+    });
 }
 
-exports.showExamPaper = examId => dispatch => {
-    axios.get(proxy + '/api/student/' + examId + '/exam',request)
+export const showExamPaper = examId => dispatch => {
+    const token = localStorage.getItem('token');
+    axios.get(proxy + '/api/student/' + examId + '/exam/' + token)
     .then(res => {
         dispatch({
             type: 'DISPLAY_STUDENT_EXAM',
@@ -71,13 +67,13 @@ exports.showExamPaper = examId => dispatch => {
                     id: 'DISPLAY_STUDENT_EXAM_FAILED'                
                 }
             })
-
        }
-            })
+    })
 }
 
-exports.submitStudentExam = (examId,studentId,examBody) => dispatch => {
-    axios.post(proxy + '/api/student/' + examId  + '/' + studentId + '/exam',examBody,request)
+export const submitStudentExam = (examId,studentId,examBody) => dispatch => {
+    const token = localStorage.getItem('token');
+    axios.post(proxy + '/api/student/' + examId  + '/' + studentId + '/exam/' + token,examBody)
     .then(res => {
         if(res.status == 200){
             dispatch({
@@ -98,13 +94,13 @@ exports.submitStudentExam = (examId,studentId,examBody) => dispatch => {
                     id: 'SUBMIT_STUDENT_EXAM_FAILED'                
                 }
             })
-
        }
-            })
+    })
 }
 
-exports.getStudentResults = id => dispatch => {
-    axios.get(proxy + '/api/student/' + id + '/results',request)
+export const getStudentResults = id => dispatch => {
+    const token = localStorage.getItem('token');
+    axios.get(proxy + '/api/student/' + id + '/results/' + token)
     .then(res => {
         dispatch({
             type: 'GET_STUDENT_RESULTS',
@@ -121,8 +117,7 @@ exports.getStudentResults = id => dispatch => {
                     id: 'GET_STUDENT_RESULTS_FAILED'                
                 }
             })
-
        }
-            });
+    });
 }
 

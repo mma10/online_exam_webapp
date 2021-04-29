@@ -5,18 +5,17 @@ import propTypes from 'prop-types';
 import { showStudentSubjects } from '../../store/actions/studentActions';
 
 class student extends Component{
-    componentDidMount(){
-        if(this.props.auth != "student")
-            this.props.history.push('/');
-        
-        console.log(document.cookie);
-        this.props.showStudentSubjects(this.props.student.id);
-    }
-
     static propTypes = {
         student: propTypes.object.isRequired,
         auth: propTypes.object.isRequired
     }
+
+    componentDidMount(){
+        if(this.props.auth.type != "student")
+            this.props.history.push('/');
+        
+        this.props.showStudentSubjects(this.props.student.id);
+    }    
 
     render(){
         // Make subjects into JSX code as table rows

@@ -1,7 +1,9 @@
 import './App.css';
 import react,{ Component } from 'react';
 
-import Navbar from '../src/components/navbar/Navbar'
+import login from '../src/components/auth/login';
+
+import Navbar from '../src/components/navbar/Navbar';
 
 import student from '../src/components/students/student';
 import subjects from '../src/components/students/subjects';
@@ -10,19 +12,33 @@ import giveExam from '../src/components/students/giveExam';
 
 import invigilator from '../src/components/invigilator/invigilator';
 
-import { Route } from 'react-router-dom'
+import students from '../src/components/management/students';
+import invigilators from '../src/components/management/invigilators';
+
+import { Route } from 'react-router-dom';
 import axios from 'axios';
 
 class App extends Component{
   componentDidMount(){
-    axios.get("http://localhost:4000/api/auth");
+    // Get the token from the backend and store locally
+    
+    const token = localStorage.getItem('token');
+    console.log(token,"Frontend token");
+    axios.get("http://localhost:4000/api/auth/" + token)
+    .then(res => {
+      if(res.data.id)
+        localStorage.setItem('token',res.data.id);
+    })
+    .catch(err => {
+      throw err;
+    });
   }
 
   render(){
     return (
       <div className = "App">
         <Navbar/>
-        {/* <Route exact path = "/login" component = { login }/>   */}
+        <Route exact path = "/login" component = { login }/>  
 
         <Route exact path = "/student/exams" component = { student }/>
         <Route exact path = "/student/giveExam" component = { giveExam }/>
@@ -34,6 +50,11 @@ class App extends Component{
         {/* <Route exact path = "/admin/studentResults_admin" component = { studentResults_admin }/> */}
 
         <Route exact path = "/invigilator" component = { invigilator }/>   
+
+        <Route exact path = "/management/students" component = { students }/>
+        <Route exact path = "/management/invigilators" component = { invigilators }/>
+        {/* <Route exact path = "/management/admins" component = { student }/>         */}
+        {/* <Route exact path = "/management/exams" component = { student }/> */}
       </div>
     );
   }

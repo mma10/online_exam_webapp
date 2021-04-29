@@ -2,7 +2,8 @@ import axios from 'axios';
 const proxy = "http://localhost:4000";
 
 const getInvigilatorExams = id => dispatch => {
-    axios.get('${proxy}/api/invigilator/${id}/exams')
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:4000/api/invigilator/' + id + '/exams/' + token)
     .then(res => {
         dispatch({
             type: 'GET_INVIGILATOR_EXAMS',

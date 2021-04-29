@@ -8,101 +8,118 @@ import '../../styles/results.css';
 
 import { getStudentResults } from '../../store/actions/studentActions';
 
-class student extends Component{
-    componentDidMount(){
-        if(this.props.auth != "student")
-            this.props.history.push('/');
-
-        this.props.getStudentResults(this.props.student.id);
-
-        var results = this.props.student.results;
-        results.years.forEach(year => {
-            var tableColor = "table-success";
-            var resultArray = results[year.toString()];
-            resultArray.forEach(r => {
-                if(r.marks < r.passing_marks)
-                    tableColor = "table-danger";
-            });
-            addTableClass(year,tableColor);
-        });
-    }
-
+class student extends Component{    
     static propTypes = {
         student: propTypes.object.isRequired,
         auth: propTypes.object.isRequired
     }
 
+    state = {
+        results: null
+    }
+
+    componentDidMount(){
+        if(this.props.auth.type != "student")
+            this.props.history.push('/');
+
+        this.props.getStudentResults(this.props.student.id);
+        this.setState({
+            results: this.props.student.results
+        })         
+    }
+
     render(){
-        var results = this.props.student.results;
-        var resultsTables = results && results.years.map((year) => {
-            var tableColor = "table-success";
-            var resultsArray = results[year.toString()];
-            var securedMarks = 0, totalMarks = 0;
-            var Class = resultsArray[0].class, status = "PASS";
-                        
-            resultsArray.forEach(r => {
-                if(r.marks < r.passing_marks){
-                    tableColor = "table-danger";
-                    status = "FAIL";
-                }
-                
-                securedMarks += r.marks;
-                totalMarks += r.max_marks;
-            });
-            
-            resultsArray = resultsArray && resultsArray.map((r,i) => {
-                return(
-                    <tr key = { r.sub_id }>
-                        <th scope="row">{ i+1 }</th>
-                        <td>{ r.sub_name }</td>
-                        <td>{ r.sub_id }</td>
-                        <td>{ r.marks }</td>
-                        <td>{ r.passing_marks }</td>
-                        <td>{ r.max_marks }</td>
-                    </tr>
-                )
-            });
+        var results = this.props.student.results;                  
 
-            return(
-                <div>
-                    <div className = "card bg-light border-light" key = { year } id = { year.toString() }>
-                        <div className = "tableHeader card-header text-left">
-                            <span className = "tableClass">CLASS: { Class }</span><br/>
-                            <span className = "tableYear">YEAR: { year }</span>
-                        </div>
-                        <br/>
+        // Set tables color
 
-                        <div className = "card-body">
-                            <table className = "table table-hover">
-                                <tbody>
-                                    <tr>
-                                        <th scope = "col">SL NO</th>
-                                        <th scope = "col">SUBJECT NAME</th>
-                                        <th scope = "col">SUBJECT ID</th>
-                                        <th scope = "col">MARKS</th>
-                                        <th scope = "col">PASSING MARKS</th>
-                                        <th scope = "col">MAX MARKS</th>
-                                    </tr>
-                                </tbody>  
-                                                    
-                                <tbody>
-                                    { resultsArray }
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div className = "">
-                            <h6 className = " text-right">PERCENTAGE: { securedMarks * 100/totalMarks }%  </h6>
-                            <h5 className = " text-center tableStatus">   { status }</h5>
-                            <br/>
-                        </div>
-                        
-                    </div>     
-                    <br/><br/> 
-                </div>
+        if(results){
+            results.years.forEach(year => {
+                var tableColor = "table-success";
+                var resultArray = results[year.toString()];
+                resultArray.forEach(r => {
+                    if(r.marks < r.passing_marks)
+                        tableColor = "table-danger";
+                });
+                addTableClass(year,tableColor);
+            });
+        }
+
+        var resultsTables;
+        if(!results)
+            resultsTables = [];
+        else{
+            var resultsTables = results && results.years.map((year) => {
+                var tableColor = "table-success";
+                var resultsArray = results[year.toString()];
+                var securedMarks = 0, totalMarks = 0;
+                var Class = resultsArray[0].class, status = "PASS";
+                            
+                resultsArray.forEach(r => {
+                    if(r.marks < r.passing_marks){
+                        tableColor = "table-danger";
+                        status = "FAIL";
+                    }
                     
-            )
-        })
+                    securedMarks += r.marks;
+                    totalMarks += r.max_marks;
+                });
+                
+                resultsArray = resultsArray && resultsArray.map((r,i) => {
+                    return(
+                        <tr key = { r.sub_id }>
+                            <th scope="row">{ i+1 }</th>
+                            <td>{ r.sub_name }</td>
+                            <td>{ r.sub_id }</td>
+                            <td>{ r.marks }</td>
+                            <td>{ r.passing_marks }</td>
+                            <td>{ r.max_marks }</td>
+                        </tr>
+                    )
+                });
+
+                return(
+                    <div>
+                        <div className = "card bg-light border-light" key = { year } id = { year.toString() }>
+                            <div className = "tableHeader card-header text-left">
+                                <span className = "tableClass">CLASS: { Class }</span><br/>
+                                <span className = "tableYear">YEAR: { year }</span>
+                            </div>
+                            <br/>
+
+                            <div className = "card-body">
+                                <table className = "table table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <th scope = "col">SL NO</th>
+                                            <th scope = "col">SUBJECT NAME</th>
+                                            <th scope = "col">SUBJECT ID</th>
+                                            <th scope = "col">MARKS</th>
+                                            <th scope = "col">PASSING MARKS</th>
+                                            <th scope = "col">MAX MARKS</th>
+                                        </tr>
+                                    </tbody>  
+                                                        
+                                    <tbody>
+                                        { resultsArray }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div className = "">
+                                <h6 className = " text-right">PERCENTAGE: { securedMarks * 100/totalMarks }%  </h6>
+                                <h5 className = " text-center tableStatus">   { status }</h5>
+                                <br/>
+                            </div>
+                            
+                        </div>     
+                        <br/><br/> 
+                    </div>
+                        
+                )
+            })
+        }
+        
 
         return(
             <div className = "studentResults">

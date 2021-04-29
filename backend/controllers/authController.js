@@ -15,18 +15,18 @@ function makeid(length) {
 }
 
 exports.createToken=(request, response)=>{
-    var token=String(request.params.token);
+    var token=request.params.token;
     if(!token || token=="" || !users[token]){
       var id=makeid(idlen);
       while(users[id]) id=makeid(idlen);
-      console.log(id);
+      console.log(id,'token');
       users[id]={"logged_in":false};
       response.status(200).json({
         id:id
       });
     }
     else if(users[token]["logged_in"] == true){
-      response.json({
+      response.status(200).json({
         msg: "Already logged in"
       });
     }
@@ -37,7 +37,7 @@ exports.createToken=(request, response)=>{
 }
 
 exports.loginPage=(request, response)=>{
-    var token=String(request.params.token);
+    var token=request.params.token;
     if(!token || token=="" || !users[token]) return response.redirect(base_url);
     if(!users[token]['logged_in']) return response.send('Please login through the form');
     else{
@@ -48,7 +48,7 @@ exports.loginPage=(request, response)=>{
 }
 
 exports.checkLogin=(request, response)=>{
-    var token=String(request.params.token);
+    var token=request.params.token;
     if(!token || token=="" || !users[token]) return response.redirect(base_url);
     if(users[token]["logged_in"]){
       return response.status(200).json({
@@ -81,14 +81,15 @@ exports.checkLogin=(request, response)=>{
       else{
         users[token]={"uname":uname,"pass":pass,"actype":actype,"logged_in":true};
         return response.status(200).json({
-          msg :"Login Successfull"
+          ...results["0"],
+          type: actype
         });
       }
     });
 }
 
 exports.logout=(request,response)=>{
-    var token=String(request.params.token);
+    var token=request.params.token;
     if(!token || token=="" || !users[token]) return response.redirect(base_url);
     if(users[token]["logged_in"]){
       response.clearCookie('token');
@@ -104,7 +105,8 @@ exports.logout=(request,response)=>{
 
 
 exports.checkAuth=(request)=>{
-  var token=String(request.params.token);
+  var token=request.params.token;
+  console.log(String(request.params.token),"backend checAuth token");
   if(!token || token=="" || !users[token]) return null;
   if(!users[token].logged_in) return null;
   return users[token];
