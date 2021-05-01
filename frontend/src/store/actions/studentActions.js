@@ -25,9 +25,9 @@ export const showStudentSubjects = id => dispatch => {
     });
 }
 
-export const showStudentExams = id => dispatch => {
+export const showStudentExams = eid => dispatch => {
     const token = localStorage.getItem('token');
-    axios.get(proxy + '/api/student/' + id +'/exams/' + token)
+    axios.get(proxy + '/api/student/' + eid +'/exams/' + token)
     .then(res => {
         dispatch({
             type: 'GET_STUDENT_EXAMS',
@@ -48,9 +48,17 @@ export const showStudentExams = id => dispatch => {
     });
 }
 
-export const showExamPaper = examId => dispatch => {
+export const updateCurrentExamSubId = (subId) => dispatch => {
+    console.log('updateCurre... func ran');
+    dispatch({
+        type: 'SET_CURRENT_SUB_ID',
+        payload: subId
+    });
+} 
+
+export const showExamPaper = subId => dispatch => {
     const token = localStorage.getItem('token');
-    axios.get(proxy + '/api/student/' + examId + '/exam/' + token)
+    axios.get(proxy + '/api/student/' + subId + '/exam/' + token)
     .then(res => {
         dispatch({
             type: 'DISPLAY_STUDENT_EXAM',
@@ -82,6 +90,7 @@ export const submitStudentExam = (examId,studentId,examBody) => dispatch => {
                     msg: "YOUR EXAM HAVE SUCCESSFULLY BEEN SUBMITTED"
                 }
             });
+            alert('Exam has been sent successfully');
         }
     })
     .catch(err => {

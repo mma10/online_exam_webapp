@@ -22,6 +22,7 @@ app.use('/api/auth/',require('./routes/authRoutes'));
 app.use('/api/student/',require('./routes/studentRoutes'));
 app.use('/api/admin/',require('./routes/adminRoutes'));
 app.use('/api/invigilator/',require('./routes/invigilatorRoutes'));
+app.use('/api/management/',require('./routes/managementRoutes'));
 
 // Run the port on 4000
 

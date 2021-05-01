@@ -17,7 +17,7 @@ exports.findInvigilatorExams = (req,res) => {
     
     // Check if inv_id is valid
 
-    var unamequery="select * from invigilator where uname = '"+details['uname']+"'";
+    var unamequery="select * from invigilator where uname = '"+details["uname"] + "'";
     var id = parseInt(req.params.invigilator_id);
     sql.query(unamequery, (err, results, fields) => {
         if(err){
@@ -27,7 +27,8 @@ exports.findInvigilatorExams = (req,res) => {
                 msg :"Error"
             });
         }
-        if(results[0]['inv_id']!=id){
+        console.log(results[0]["inv_id"],id,"comparision");
+        if(results[0]["inv_id"]!=id){
             return res.status(404).json({
                 msg :"Invalid Invigilator Id"
             });

@@ -5,7 +5,7 @@ import $ from 'jquery';
 
 import '../../styles/managementInvigilators.css';
 
-import { deleteInvigilator, addInvigilatorExam, removeInvigilatorExam } from '../../store/actions/managementActions';
+import { getAllInvigilators, addInvigilator, deleteInvigilator, addInvigilatorExam, removeInvigilatorExam } from '../../store/actions/managementActions';
 
 class invigilators extends Component{
     static propTypes = {
@@ -20,6 +20,8 @@ class invigilators extends Component{
     componentDidMount(){
         if(this.props.auth.type != "management")
             this.props.history.push('/');
+
+        this.props.getAllInvigilators()
     }
 
     state = {
@@ -44,7 +46,7 @@ class invigilators extends Component{
             return alert('Please enter all fields');
 
         // Call action to post data
-        this.props.addInvigilatorExam(id);
+        this.props.addInvigilatorExam(id,this.state.addEid);
     }
 
     removeInvExam = (id) => {
@@ -53,7 +55,7 @@ class invigilators extends Component{
             return alert('Please enter all fields');
 
         // Call action to delete data
-        this.props.removeInvigilatorExam(id);
+        this.props.removeInvigilatorExam(id,this.state.removeEid);
     }
 
     deleteInv = (id) => {
@@ -61,13 +63,15 @@ class invigilators extends Component{
         this.props.deleteInvigilator(id);
     }
 
-    addInv = () => {
+    addInv = (e) => {
+        e.preventDefault();
+        
         // Check if all fields are filled
         if(!this.state.name || !this.state.username || !this.state.password)
             return alert('Please enter all fileds');
         
         // Call action to post data
-        this.props.addInvigilatorExam(this.state);
+        this.props.addInvigilator(this.state);
     }
 
     render(){
@@ -83,7 +87,6 @@ class invigilators extends Component{
 
                             <div className = "card-text container text-left">
                                 <span>NAME: { invigilator.name }</span><br/>
-                                <span>EXAMS ASSIGNED: { invigilator.exams }</span>
                             </div><br/> 
 
                             <div className = "row">
@@ -166,7 +169,7 @@ class invigilators extends Component{
                     </div>   
                 </div><br/>
 
-                <form className = "addStudent container bg-light">
+                <form className = "addStudent container bg-light" onSubmit = { e => this.addInv(e) }>
                     <div className = "container">
                         <header className = "pt-3 pb-2 formHeader">ADD INVIGILATOR</header>
                         <div className = "row">
@@ -185,7 +188,7 @@ class invigilators extends Component{
                                 <input name = "password" id = "addNewInvPassword" type = "password" className = "form-control" onChange = {this.updateState} />
                             </div>
                         </div>                        
-                        <button className = "btn btn-primary" onClick = {this.addInv}>
+                        <button className = "btn btn-primary">
                             ADD
                         </button><br/>
                     </div>                    
@@ -205,4 +208,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps,{ })(invigilators);
+export default connect(mapStateToProps,{ getAllInvigilators,addInvigilator, deleteInvigilator, addInvigilatorExam, removeInvigilatorExam })(invigilators);

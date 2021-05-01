@@ -69,7 +69,7 @@ class student extends Component{
                     return(
                         <tr key = { r.sub_id }>
                             <th scope="row">{ i+1 }</th>
-                            <td>{ r.sub_name }</td>
+                            <td>{ r.name }</td>
                             <td>{ r.sub_id }</td>
                             <td>{ r.marks }</td>
                             <td>{ r.passing_marks }</td>

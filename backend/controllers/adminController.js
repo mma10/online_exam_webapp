@@ -156,31 +156,9 @@ exports.submitQuestionPaper = (req, res) => {
                 msg :"Invalid Admin Id"
             });
         }
-        // Extracting parameters
-        var admin_id = parseInt(req.params.admin_id);
-        var exam_id = parseInt(req.params.exam_id);
-        var numberResAdded = 0;
-        
-        var questions = req.body.questions;
-        //console.log(questions);
-        var sub_id = req.body.sub_id;
-        var start_time = req.body.start_time;
-        var end_time = req.body.end_time;
-        var passing_marks = req.body.passing_marks;
 
-        var query1 = "insert into question (qid, statement, op1, op2, op3, op4, ans, ad_id, sub_id, eid, Marks) values ?";
-        var query2 = "insert into exam (eid, start_time, end_time, max_marks, passing_marks, sub_id) values ?"  ;
-
-        var max_marks = 0;
-        for(var i=0; i<questions.length; i++){
-            max_marks += questions[i].marks; 
-        }
-
-        var values = [exam_id, start_time, end_time, max_marks, passing_marks, sub_id];
-        var array = [];
-        array.push(values);
-        console.log(values);
-        sql.query(query2, [array], (err, results, fields) => {
+        var q="select max(eid) eid from exam";
+        sql.query(q, (err, results, fields) => {
             if(err){
                 sql=require('../models/db');
                 console.log(err);
@@ -188,40 +166,91 @@ exports.submitQuestionPaper = (req, res) => {
                     msg :"Error"
                 });
             }
-            console.log("total rows inserted into question table : " + numberResAdded + " ");
-            return res.status(200).json({
-                affectedRows_Result: results.affectedRows
-            });
-        });
 
-        values = [];
-        questions.forEach(res => {
-            var temp = [];
-            temp.push(res.qid);
-            temp.push(res.statement);
-            temp.push(res.op1);
-            temp.push(res.op2);
-            temp.push(res.op3);
-            temp.push(res.op4);
-            temp.push(res.ans);
-            temp.push(admin_id);
-            temp.push(sub_id);
-            temp.push(exam_id);
-            temp.push(res.marks);
-            values.push(temp);
-        });
+            var exam_id =  parseInt(results[0].eid);
 
-        //console.log(query1);
-        sql.query(query1, [values], (err, results, fields) => {
-            if(err){
-                sql=require('../models/db');
-                console.log(err);
-                return res.status(200).json({
-                    msg :"Error"
+            var q="select max(qid) max_qid from question";
+            sql.query(q, (err, results, fields) => {
+                if(err){
+                    sql=require('../models/db');
+                    console.log(err);
+                    return res.status(200).json({
+                        msg :"Error"
+                    });
+                }
+
+            
+                    var max_qid = parseInt(results[0].max_qid);
+                    // Extracting parameters
+                    var admin_id = parseInt(req.params.admin_id);
+                    
+                    var numberResAdded = 0;
+                    
+                    var questions = req.body.questions;
+                    //console.log(questions);
+                    var sub_id = req.body.sub_id;
+                    var start_time = req.body.start_time;
+                    var end_time = req.body.end_time;
+                    var passing_marks = req.body.passing_marks;
+
+                    var query1 = "insert into question (qid, statement, op1, op2, op3, op4, ans, ad_id, sub_id, eid, Marks) values ?";
+                    var query2 = "insert into exam (eid, start_time, end_time, max_marks, passing_marks, sub_id) values ?"  ;
+
+                    var max_marks = 0;
+                    for(var i=0; i<questions.length; i++){
+                        max_marks += questions[i].marks; 
+                    }
+
+                    var values = [exam_id+1, start_time, end_time, max_marks, passing_marks, sub_id];
+                    var array = [];
+                    array.push(values);
+                    console.log(values);
+                    sql.query(query2, [array], (err, results, fields) => {
+                        if(err){
+                            sql=require('../models/db');
+                            console.log(err);
+                            return res.status(200).json({
+                                msg :"Error"
+                            });
+                        }
+                        console.log("total rows inserted into question table : " + numberResAdded + " ");
+                        return res.status(200).json({
+                            affectedRows_Result: results.affectedRows
+                        });
+                    });
+
+                    values = [];
+                    var counter = max_qid;
+                    questions.forEach(res => {
+                        var temp = [];
+                        counter = counter+1;
+                        temp.push(res.counter);
+                        temp.push(res.statement);
+                        temp.push(res.op1);
+                        temp.push(res.op2);
+                        temp.push(res.op3);
+                        temp.push(res.op4);
+                        temp.push(res.ans);
+                        temp.push(admin_id);
+                        temp.push(sub_id);
+                        temp.push(exam_id+1);
+                        temp.push(res.marks);
+                        values.push(temp);
+                    });
+
+                    //console.log(query1);
+                    sql.query(query1, [values], (err, results, fields) => {
+                        if(err){
+                            sql=require('../models/db');
+                            console.log(err);
+                            return res.status(200).json({
+                                msg :"Error"
+                            });
+                        }
+                        numberResAdded = results.affectedRows;
+                        console.log("total rows inserted into question table : " + numberResAdded + " ");
+                    });
                 });
-            }
-            numberResAdded = results.affectedRows;
-            console.log("total rows inserted into question table : " + numberResAdded + " ");
         });
     });
 };

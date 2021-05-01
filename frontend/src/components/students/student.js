@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import propTypes from 'prop-types';
 
-import { showStudentExams } from '../../store/actions/studentActions';
+import { showStudentExams, updateCurrentExamSubId } from '../../store/actions/studentActions';
 
 const moment = require('moment');
 
@@ -19,6 +19,10 @@ class student extends Component{
             
         this.props.showStudentExams(this.props.student.id);
     }    
+
+    setCurrentExamId = (exam) => {
+        this.props.updateCurrentExamSubId(exam.sub_id);
+    }
 
     render(){
         var exams = this.props.student.exams;
@@ -63,7 +67,7 @@ class student extends Component{
                                         <h6>ON: { moment(examDate).format('DD MMMM YYYY') }</h6>                       
                                         <p>TIMINGS: { startTime } { " " } TO { " " } { endTime }</p> 
                                         <Link className = "text-white" to = "/student/giveExam">
-                                            <button className = "btn btn-primary">
+                                            <button className = "btn btn-primary" onClick = { () => this.setCurrentExamId(exam) }>
                                                 <span>TAKE EXAM</span> 
                                             </button>                     
                                         </Link>                                                               
@@ -108,4 +112,4 @@ const mapStateToProps = (state) => {
     });
 }
 
-export default connect(mapStateToProps,{ showStudentExams })(student);
+export default connect(mapStateToProps,{ showStudentExams,updateCurrentExamSubId })(student);

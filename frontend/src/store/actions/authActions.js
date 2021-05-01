@@ -30,6 +30,9 @@ export const login = (credentials) => dispatch => {
                 type: 'GET_MANAGEMENT_DETAILS',
                 payload: res.data
             });
+
+        localStorage.setItem('auth',credentials.actype);
+        alert('LOGIN SUCCESSFUL');
     })
     .catch(err => {
         if(err.response){
@@ -42,8 +45,53 @@ export const login = (credentials) => dispatch => {
                 }
             });
         }        
-    })
+    });
 }
+
+export const loadUser = () => dispatch => {
+    const token = localStorage.getItem('token');        
+    axios.get('http://localhost:4000/api/auth/loadUser/' + token)
+    .then(res => {
+        dispatch({
+            type: 'LOGIN',
+            payload: res.data
+        });
+
+        if(res.data.type == "student")
+            dispatch({
+                type: 'GET_STUDENT_DETAILS',
+                payload: res.data
+            });
+        else if(res.data.type == "admin")
+            dispatch({
+                type: 'GET_ADMIN_DETAILS',
+                payload: res.data
+            });
+        else if(res.data.type == "invigilator")
+            dispatch({
+                type: 'GET_INVIGILATOR_DETAILS',
+                payload: res.data
+            });
+        else if(res.data.type == "management")
+            dispatch({
+                type: 'GET_MANAGEMENT_DETAILS',
+                payload: res.data
+            });
+    })
+    .catch(err => {
+        if(err.response){
+            dispatch({
+                type: 'GET_ERROR',
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'LOGIN_FAILED'                
+                }
+            });
+        }      
+    });
+}
+
 
 export const logout = () => dispatch => {
     const token = localStorage.getItem('token');
@@ -72,6 +120,10 @@ export const logout = () => dispatch => {
         dispatch({
             type: 'CLEAR_ERROR'
         });
+
+        localStorage.removeItem('auth');
+        alert('LOGOUT SUCCESSFUL');
+        window.location.reload();
     })
     .catch(err => {
         if(err.response){

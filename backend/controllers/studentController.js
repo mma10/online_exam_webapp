@@ -147,7 +147,7 @@ exports.findExamPaper = (req,res) => {
                     });
                 }
                 res.status(200).json({
-                    examDetails,
+                    currentExam: examDetails[0],
                     questions: result
                 });
             });
@@ -175,6 +175,10 @@ exports.submitStudentExam = (req,res) => {
     }
     var unamequery="select * from student where uname = '"+details['uname']+"'";
 
+    // Extract student and exam id
+    var studentId = parseInt(req.params.student_id);
+    var examId = parseInt(req.params.exam_id);
+
     sql.query(unamequery, (err, results, fields) => {
         if(err){
             sql=require('../models/db');
@@ -183,21 +187,18 @@ exports.submitStudentExam = (req,res) => {
                 msg :"Error"
             });
         }
-        if(results[0]['st_id']!=id){
+        if(results[0]['st_id']!=studentId){
             return res.status(404).json({
                 msg :"Invalid Student Id"
             });
-        }
-        // Extract student and exam id
-        var studentId = parseInt(req.params.student_id);
-        var examId = parseInt(req.params.exam_id);
+        }      
 
         // Add the responses to the database
 
         var numberResAdded = 0;
         var responses = req.body.responses;
         var body = req.body;
-        var query = "INSERT INTO res (st_id,eid,qid,res) VALUES ?";
+        var query = "INSERT INTO response (st_id,eid,qid,response) VALUES ?";
         var values = [];
         responses.forEach(res => {
             var temp = [];
@@ -253,8 +254,8 @@ exports.submitStudentExam = (req,res) => {
 
             console.log(marks + "/" + maxMarks);
 
-            query = "INSERT INTO result VALUES ?";
-            values = [marks,body.class,studentId,body.sub_id,body.year,maxMarks];
+            query = "INSERT INTO result(marks,class,st_id,sub_id,year,max_marks,passing_marks) VALUES ?";
+            values = [marks,body.class,studentId,body.sub_id,body.year,maxMarks,body.passing_marks];
             var array = [];
             array.push(values);
             console.log(values);
@@ -302,7 +303,7 @@ exports.findStudentResults = (req,res) => {
                 msg :"Invalid Student Id"
             });
         }
-        var query = "SELECT * FROM result WHERE st_id = ?";
+        var query = "SELECT * FROM result r, subject s WHERE r.sub_id = s.sub_id and st_id = ?";
         sql.query(query,[id],(err,result) => {
             if(err){
                 sql=require('../models/db');

@@ -38,7 +38,9 @@ exports.createToken=(request, response)=>{
 
 exports.loginPage=(request, response)=>{
     var token=request.params.token;
-    if(!token || token=="" || !users[token]) return response.redirect(base_url);
+    if(!token || token=="" || !users[token]) return response.status(404).json({
+      msg: "Invalid or no token"
+    });
     if(!users[token]['logged_in']) return response.send('Please login through the form');
     else{
       return response.status(200).json({
@@ -49,18 +51,20 @@ exports.loginPage=(request, response)=>{
 
 exports.checkLogin=(request, response)=>{
     var token=request.params.token;
-    if(!token || token=="" || !users[token]) return response.redirect(base_url);
+    if(!token || token=="" || !users[token]) return response.status(404).json({
+      msg: "Invalid or no token"
+    });
     if(users[token]["logged_in"]){
       return response.status(200).json({
         msg: "Already Logged In"
       });
     };
-    var uname=request.body.uname;
-    var pass=request.body.pass;
+    var uname=request.body.username;
+    var pass=request.body.password;
     var actype=request.body.actype;
     if(!uname || !pass || !actype){
         console.log("Crededntial are null");
-        return response.status(200).json({
+        return response.status(404).json({
           msg :"Crededntial are null"
         });
     }
@@ -88,9 +92,45 @@ exports.checkLogin=(request, response)=>{
     });
 }
 
+exports.loadUser = (request,response) => {
+    console.log('loadUser ran');
+    var token=request.params.token;
+    if(!token || token=="" || !users[token]) return response.status(404).json({
+      msg: "Invalid or no token"
+    });
+    if(users[token]["logged_in"]){
+      var actype = users[token]["actype"];
+      var uname = users[token]["uname"];
+      var pass = users[token]["pass"];
+
+      var q="select * from "+actype+" where uname = '"+uname+"' and password = '"+pass+"'";
+      sql.query(q,(err,results) => {
+        if(err){
+          sql=require('../models/db');
+          console.log(err);
+          return response.status(400).json({
+            msg :"Error"
+          });
+        }
+        if(results.length<=0){
+          return response.status(404).json({
+            msg :"Invalid or wrong token"
+          });
+        }
+
+        return response.status(200).json({
+          ...results["0"],
+          type: actype
+        });
+      });
+    };
+}
+
 exports.logout=(request,response)=>{
     var token=request.params.token;
-    if(!token || token=="" || !users[token]) return response.redirect(base_url);
+    if(!token || token=="" || !users[token]) return response.status(404).json({
+      msg: "Invalid or no token"
+    });
     if(users[token]["logged_in"]){
       response.clearCookie('token');
       delete(users.token);

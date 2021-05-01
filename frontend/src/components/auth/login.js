@@ -8,6 +8,7 @@ import { login } from '../../store/actions/authActions';
 
 class Login extends Component{
     static propTypes = {
+        auth: propTypes.object.isRequired,
         error: propTypes.object.isRequired,
         login: propTypes.func.isRequired        
     }
@@ -20,13 +21,15 @@ class Login extends Component{
 
     updateState = (e) => {
         e.persist();
-
+        console.log(e.target.className);
         this.setState({
             [e.target.className]: e.target.value
         });
     }
 
-    userLogin = () => {
+    userLogin = (e) => {
+        e.preventDefault();
+
         // Check if all credentials are filled
         if(!this.state.username || !this.state.password || !this.state.actype)
             return alert('Please enter all credentials');      
@@ -36,10 +39,13 @@ class Login extends Component{
     }
 
     render(){
+        // if(this.props.auth.loggedIn)
+        //     this.props.history.push('/');
+
         return(
             <div>
                 <div className="loginContainer">                                
-                    <form className="loginForm" onSubmit={ this.loginUser} >  
+                    <form className="loginForm" onSubmit={ e => this.userLogin(e) } >  
                         <div className="text">
                             <span>LOGIN</span>
                         </div>
@@ -84,7 +90,7 @@ class Login extends Component{
                             </div>                        
                         </div>
 
-                        <button type="submit" className="submitButton btn btn-primary" onClick = {this.userLogin}>
+                        <button type="submit" className="submitButton btn btn-primary">
                            SUBMIT
                         </button>                   
                     </form>
@@ -101,6 +107,7 @@ class Login extends Component{
 
 const mapStateToProps = (state) => {
     return({
+        auth: state.auth,
         error: state.error
     });
 }

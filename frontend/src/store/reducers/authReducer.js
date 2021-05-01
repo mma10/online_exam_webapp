@@ -1,8 +1,8 @@
 const initState = {
-    id: 1,
-    type: "management",
-    loggedIn: true,
-    name: "MANAGEMENT"
+    id: null,
+    type: null,
+    loggedIn: false,
+    name: null
 }
 
 const authReducer = (state = initState,action) => {

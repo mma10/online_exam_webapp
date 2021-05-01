@@ -10,6 +10,9 @@ import subjects from '../src/components/students/subjects';
 import results from '../src/components/students/results';
 import giveExam from '../src/components/students/giveExam';
 
+import admin from '../src/components/admin/admin';
+import setExam from '../src/components/admin/setExam';
+
 import invigilator from '../src/components/invigilator/invigilator';
 
 import students from '../src/components/management/students';
@@ -18,12 +21,15 @@ import invigilators from '../src/components/management/invigilators';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
 
+
+import { loadUser } from './store/actions/authActions'; 
+import { connect } from 'react-redux';
+
 class App extends Component{
   componentDidMount(){
     // Get the token from the backend and store locally
     
     const token = localStorage.getItem('token');
-    console.log(token,"Frontend token");
     axios.get("http://localhost:4000/api/auth/" + token)
     .then(res => {
       if(res.data.id)
@@ -32,6 +38,14 @@ class App extends Component{
     .catch(err => {
       throw err;
     });
+
+    // Check if the user if already logged in. If yes, retrieve the corresponsing data
+
+    const auth = localStorage.getItem('auth');
+    if(auth){
+      // Call the loadUser action
+      this.props.loadUser();
+    }
   }
 
   render(){
@@ -45,9 +59,8 @@ class App extends Component{
         <Route exact path = "/student/subjects" component = { subjects }/>        
         <Route exact path = "/student/results" component = { results }/>
 
-        {/* <Route exact path = "/admin" component = { admin }/> */}
-        {/* <Route exact path = "/admin/setExam" component = { setExam }/> */}
-        {/* <Route exact path = "/admin/studentResults_admin" component = { studentResults_admin }/> */}
+        <Route exact path = "/admin" component = { admin }/>
+        <Route exact path = "/admin/setExam" component = { setExam }/>
 
         <Route exact path = "/invigilator" component = { invigilator }/>   
 
@@ -61,4 +74,4 @@ class App extends Component{
   
 }
 
-export default App;
+export default connect(null,{ loadUser })(App);

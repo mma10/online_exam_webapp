@@ -4,7 +4,7 @@ import propTypes from 'prop-types';
 
 import managementStudents from '../../styles/managementStudents.css';
 
-import { deleteStudent, addStudent } from '../../store/actions/managementActions';
+import { getAllStudents, deleteStudent, addStudent } from '../../store/actions/managementActions';
 
 class students extends Component{
     static propTypes = {
@@ -18,6 +18,8 @@ class students extends Component{
     componentDidMount(){
         if(this.props.auth.type != "management")
             this.props.history.push('/');
+
+        this.props.getAllStudents();
     }
 
     state = {
@@ -41,7 +43,9 @@ class students extends Component{
         this.props.deleteStudent(id);
     }
 
-    addStudent = () => {
+    addStudent = (e) => {
+        e.preventDefault();
+
         // Check if all fields are filled
         if(!this.state.name || !this.state.class || !this.state.batch || !this.state.username || !this.state.password)
             return alert('Please enter all fields');
@@ -50,14 +54,16 @@ class students extends Component{
         this.props.addStudent(this.state);
     }
 
-    render(){
+    render(){      
         const studentsArray = this.props.management.students;
-        studentsArray.sort(function(a,b){
-            if(a.class <= b.class)
-                return -1;
-            else    
-                return 1;
-        });
+        if(this.props.management.students){
+            studentsArray.sort(function(a,b){
+                if(a.class <= b.class)
+                    return -1;
+                else    
+                    return 1;
+            });
+        }        
         const students = studentsArray && studentsArray.map(student => {
             return(
                 <div className = "col-lg-4 col-md-4 col-sm-6 pt-2 pb-2" key = { student.id }>
@@ -90,7 +96,7 @@ class students extends Component{
                     </div>   
                 </div><br/>
 
-                <form className = "addStudent container bg-light">
+                <form className = "addStudent container bg-light" onSubmit = { e => this.addStudent(e) }>
                     <div className = "container">
                         <header className = "pt-3 pb-2 formHeader">ADD STUDENT</header>
                         <div className = "row">
@@ -122,7 +128,7 @@ class students extends Component{
                             </div>
                         </div>                    
 
-                        <button className = "btn btn-primary" onClick = {this.addStudent}>
+                        <button className = "btn btn-primary">
                             ADD
                         </button><br/>
                     </div>                    
@@ -141,4 +147,4 @@ const mapStateToProps = (state) => {
     });
 } 
 
-export default connect(mapStateToProps,{ })(students);
+export default connect(mapStateToProps,{ getAllStudents,addStudent,deleteStudent })(students);

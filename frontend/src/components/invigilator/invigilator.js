@@ -9,20 +9,20 @@ import getInvigilatorExams from '../../store/actions/invigilatorActions';
 const moment = require('moment');
 
 class admin extends Component{
+    static propTypes = {
+        invigilator: propTypes.object.isRequired,
+        auth: propTypes.object.isRequired
+    }
+
     componentDidMount(){
         // Check if authenticated
-        console.log(this.props.auth.type);
+        console.log(this.props.auth,"auth type");
         if(this.props.auth.type != "invigilator")
             this.props.history.push('/');
 
         // Get invilgilator exams
         this.props.getInvigilatorExams(this.props.invigilator.id);
-    }
-
-    static propTypes = {
-      invigilator: propTypes.object.isRequired,
-      auth: propTypes.object.isRequired
-    }
+    }    
 
     render(){
         // Display exams of the invigilator and highlight the one being conducted at the present time
@@ -88,9 +88,9 @@ class admin extends Component{
                     <span>ID: { this.props.invigilator.id }</span><br/>
                     <span>NAME: { this.props.invigilator.name }</span><br/>               
                 </header>
-                <large className = "text-center d-block title">
+                <span className = "text-center d-block title">
                     EXAMS<br/><br/>
-                </large>
+                </span>
                 <div className = "examList">
                     <div className = "row">
                         { exams }
@@ -99,8 +99,6 @@ class admin extends Component{
             </div>
         )
     }
-
-
 }
 
 const mapStateToProps = (state) => {

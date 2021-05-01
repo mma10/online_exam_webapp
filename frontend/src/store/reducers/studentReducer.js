@@ -1,19 +1,19 @@
 const initState = {
-    id: 1,
-    name: "ANUJ",
-    rollNo: 1,
-    class: 5,
-    subjects: [
+    id: null,
+    name: null,
+    rollNo: null,
+    class: null,
+    subjects: null
         // {sub_id: 1, sub_name: "ENGLISH1", admin_name: "AKSHAY1"},
         // {sub_id: 2, sub_name: "ENGLISH2", admin_name: "AKSHAY2"},
         // {sub_id: 3, sub_name: "ENGLISH3", admin_name: "AKSHAY3"}
-    ],
-    exams:[
+    ,
+    exams: null
         // {"sub_id":1,"eid":1,"start_time":"2015-12-31T18:30:01.000Z","end_time":"2015-12-31T21:30:01.000Z","max_marks":100,"passing_marks":35,"name":"maths 1","class":null},
         // {"sub_id":2,"eid":2,"start_time":"2016-01-01T18:30:01.000Z","end_time":"2016-01-01T21:30:01.000Z","max_marks":100,"passing_marks":40,"name":"maths 2","class":null},
         // {"sub_id":3,"eid":3,"start_time":"2016-01-02T18:30:01.000Z","end_time":"2016-01-02T21:30:01.000Z","max_marks":100,"passing_marks":30,"name":"maths 3","class":null}
-    ],
-    currentExam: null,
+    ,
+    currentExam: [],
         // examDetails: {
         //     sub_id: 1, name: "ENGLISH1", max_marks: 100, passing_marks: 35, invigilator: "AKASH 1", end_time: "2021/04/30 18:26:00"
         // },
@@ -29,8 +29,8 @@ const initState = {
         //     { qid: 9, statement: "statement 9", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10},
         //     { qid: 10, statement: "statement 10", op1: "abcd", op2: "apple", op3: "mango", op4: "banana", marks: 10}
         // ]
-    
-    examMsg: null,
+    questions: [],    
+    currentExamSubId: null,
     results: null
         // years: [2018,2019,2020],
         // 2018: [
@@ -78,7 +78,14 @@ const studentReducer = (state = initState,action) => {
         case 'DISPLAY_STUDENT_EXAM':
             return({
                 ...state,
-                currentExam: action.payload
+                currentExam: action.payload.currentExam,
+                questions: action.payload.questions
+            });
+        
+        case 'SET_CURRENT_SUB_ID':
+            return({
+                ...state,
+                currentExamSubId: action.payload
             });
 
         case 'SUBMIT_STUDENT_EXAM':

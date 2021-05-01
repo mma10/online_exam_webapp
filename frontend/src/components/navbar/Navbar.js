@@ -88,12 +88,6 @@ class navbar extends Component{
                         <span>SUBJECTS UNDERTAKEN</span>
                     </NavLink>
                 </li>
-                    
-                <li className = "nav-item">
-                    <NavLink to = "/admin/studentInfo" className = "nav-link">
-                        <span>STUDENTS</span>
-                    </NavLink> 
-                </li>
 
                 <li className = "nav-item">
                     <NavLink to = "/student/setExam" className = "nav-link">
@@ -142,7 +136,12 @@ class navbar extends Component{
             </ul>
         );
         const invigilatorLinks = (
-            <ul className = "navbar-nav ml-auto">                
+            <ul className = "navbar-nav ml-auto">  
+                <li className = "nav-item">
+                    <NavLink to = "/invigilator" className = "nav-link">
+                        <span>EXAMS ASSIGNED</span>
+                    </NavLink>
+                </li>
                 <li className = "nav-item">
                     <NavLink to = "/login" className = "nav-link">
                         <Logout />

@@ -14,97 +14,89 @@ class student extends Component{
     }
 
     state = {
-        responses: null
+        res: []
     }
 
     componentDidMount(){
         if(this.props.auth.type != "student")
             this.props.history.push('/');
 
-        if(!this.props.student.currentExam)
-            this.props.history.push('/student/exams');
+        // if(!this.props.student.currentExamId)
+        //     this.props.history.push('/student/exams');
         // Get the question paper. Dont show if student have alrady submitted before - handled by backend
-        this.props.showExamPaper(this.props.student.currentExam.examDetails.sub_id);
-               
-        
-
-        // Sort questions ordered by qid
-        this.props.student.currentExam.questions.sort(function(a,b){
-            if(a.qid <= b.qid)
-                return -1;
-            else
-                return 1;
-        });
-        
-        // Set the initial state
-
-        var responses = [];
-            this.props.student.currentExam.questions.forEach(q => {
-                var obj = {
-                    qid: q.qid,
-                    res: -1,
-                    qMarks: q.max_marks
-                }
-                responses.push(obj);                
-            });
-            console.log(responses);
-            this.setState({
-                responses
-            });
-
-        // Store the responses in browser as localStorage and set the initial state
-        // if(!localStorage.getItem('responses')){
-        //     var responses = [];
-        //     this.props.student.currentExam.questions.forEach(q => {
-        //         var obj = {
-        //             qid: q.qid,
-        //             res: -1,
-        //             qMarks: q.max_marks
-        //         }
-        //         responses.push(obj);                
-        //     });
-        //     console.log(responses);
-        //     localStorage.setItem('responses',responses);
-        //     this.setState({
-        //         responses
-        //     });
-        // }
-        // else{
-        //     this.setState({
-        //         responses: localStorage.getItem('responses')
-        //     });
-        // }       
+        this.props.showExamPaper(this.props.student.currentExamSubId);  
     } 
+    
+    submitExam = (e) => {
+        e.preventDefault();
 
-    submitExam = () => {
         // Make student body
 
         var max_marks = 0;
-        this.props.student.currentExam.questions.forEach(q => {
+        this.props.student.questions.forEach(q => {
             max_marks += q.max_marks;
         });
         const examBody = {
-            responses: this.state.responses,
+            responses: this.state.res,
             class: this.props.student.class, 
-            sub_id: this.props.student.currentExam.examDetails.sub_id,
+            sub_id: this.props.student.currentExam.sub_id,
             year: new Date().getFullYear(), // Make it as academic current year
+            passing_marks: this.props.student.currentExam.passing_marks,
             max_marks
         };
 
-        this.props.submitStudentExam(examBody);
+        console.log(this.state.res,"State before submitting");
+        this.props.submitStudentExam(this.props.student.currentExam.eid,this.props.student.id,examBody);
         // localStorage.removeItem('responses');
 
         // Redirect to results page
         this.props.history.push('/student/results');
     }
 
-    setTimer = () => {
-       
+    updateState = (e) => {
+        e.persist();
+        var responses = [];
+
+        var count = 0;
+        responses = this.state.res && this.state.res.map(res => {
+            if(res.qid == e.target.name){
+                count++;
+                return({
+                    ...res,
+                    res: parseInt(e.target.value)
+                });
+            }
+            else return(res)            
+        });
+
+        if(count == 0){
+            responses.push({
+                qid: parseInt(e.target.name),
+                res: parseInt(e.target.value),
+                qMarks: parseInt(e.target.id)
+            });
+        }
+
+        this.setState({
+            res: responses
+        });   
+        //
+        console.log(this.state.res,'latest response');    
     }
 
-    render(){
-        if(this.props.student.currentExam){
-            var questions = this.props.student.currentExam.questions;
+    render(){          
+            if(this.props.questions){
+                // Sort questions ordered by qid
+                this.props.student.questions.sort(function(a,b){
+                    if(a.qid <= b.qid)
+                        return -1;
+                    else
+                        return 1;
+                });
+            }          
+
+            var count = 1;
+            var questions = this.props.student.questions;
             questions = questions && questions.map(q => {
                 return(
                     <div className = "question bg-light container text-left pt-3 pb-3" key = { q.id }>
@@ -112,38 +104,38 @@ class student extends Component{
                             <div className = "container pt-3 pb-3">
                                 <div className = "text-right font-weight-bold">
                                     <span>
-                                        MARKS: { q.marks }
+                                        MARKS: { q.max_marks }
                                     </span> 
                                 </div>
                                 
                                 <div className = "card-title questionStatement">
                                     <p>
-                                        <span className = "questionIndex">{ q.qid } { ". " }</span>
+                                        <span className = "questionIndex">{ count++ } { ". " }</span>
                                         { q.statement }
                                     </p>                            
                                 </div>
                                 <div id = { q.id } className = "card-body questionOptions">
                                     <div className = "row text-justify options">
                                         <div className = "col-lg-3 col-sm-6">                                            
-                                            <input type = "radio" name = { q.qid } value = { q.op1 }/>
+                                            <input type = "radio" id = { q.max_marks } name = { q.qid } value = { 1 } onChange = { this.updateState }/>
                                             <span> </span>
                                             <label> a.) { q.op1 } </label>                                        
                                         </div>
 
                                         <div className = "col-lg-3 col-sm-6">
-                                            <input type = "radio" name = { q.qid } value = { q.op2 }/>
+                                            <input type = "radio" id = { q.max_marks } name = { q.qid } value = { 2 } onChange = { this.updateState }/>
                                             <span> </span>
                                             <label> b.) { q.op2 } </label>
                                         </div>
 
                                         <div className = "col-lg-3 col-sm-6">                                            
-                                            <input type = "radio" name = { q.qid } value = { q.op3 }/>
+                                            <input type = "radio" id = { q.max_marks } name = { q.qid } value = { 3 } onChange = { this.updateState }/>
                                             <span> </span>
                                             <label> c.) { q.op3 } </label>
                                         </div>
 
                                         <div className = "col-lg-3 col-sm-6">                                            
-                                            <input type = "radio" name = { q.qid } value = { q.op4 }/>
+                                            <input type = "radio" id = { q.max_marks } name = { q.qid } value = { 4 } onChange = { this.updateState }/>
                                             <span> </span>
                                             <label> d.) { q.op4 } </label>
                                         </div>                                                                                                                            
@@ -155,34 +147,43 @@ class student extends Component{
                     
                 )
             });
-        }
-        
-        // Create countdown timer for the exam  
 
-        var myFunc = setInterval(() => {
-            var nowTime = new Date().getTime();
-            var endTime = new Date(this.props.student.currentExam.examDetails.end_time).getTime();
-            var timeLeft = endTime - nowTime;
+            var invigilator = this.props.student.currentExam.invigilator;
+            var sub_id = this.props.student.currentExam.sub_id;
+            var max_marks = this.props.student.currentExam.max_marks;
+            var passing_marks = this.props.student.currentExam.passing_marks;
+            var subject = this.props.student.currentExam.name;   
+            var end_time = this.props.student.currentExam.end_time;   
+            var currentExam = this.props.student.currentExam;             
+
+                // Create countdown timer for the exam  
+
+                var myFunc = setInterval(() => {
+                    var nowTime = new Date().getTime();
+                    var endTime = new Date(end_time).getTime();
+                    var timeLeft = endTime - nowTime;
+                    
+                    var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                    var dayString = days ? days + " days " : "";
+
+                    if (timeLeft == 0) {     
+                        clearInterval(myFunc);       
+                        timer = "TIME IS UP"
             
-            var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                        // Submit the response
+                        this.submitExam();
+                        $('.timer').html(timer);
+                        return;
+                    }      
+                    var timer = dayString + hours + " hrs " + minutes + " mins " + seconds + " secs";
+                    $('.timer').html(timer);           
+                },1000);    
 
-            var dayString = days ? days + " days " : "";
-
-            if (timeLeft <= 0) {     
-                clearInterval(myFunc);       
-                timer = "TIME IS UP"
-    
-                // Submit the response
-                this.submitExam();
-                $('.timer').html(timer);
-                return;
-            }      
-            var timer = dayString + hours + " hrs " + minutes + " mins " + seconds + " secs";
-            $('.timer').html(timer);           
-        },1000);        
+                           
 
         return(
             <div className = "giveExam container">
@@ -193,24 +194,24 @@ class student extends Component{
                                 <large>NAME: { this.props.student.name }</large><br/>
                                 <large>ROLL NO: { this.props.student.rollNo }</large><br/>
                                 <large>CLASS: {this.props.student.class }</large><br/>
-                                <large>INVIGILATOR: { this.props.student.currentExam.examDetails.invigilator }</large>
+                                <large>INVIGILATOR: { currentExam ? invigilator : "" }</large>
                             </div>
                             <div className = "col-lg-6 col-md-4 col-sm-3 text-justify text-right">
-                                <large>SUBJECT ID: { this.props.student.currentExam.examDetails.sub_id }</large><br/>                                
-                                <large>MAX MARKS: { this.props.student.currentExam.examDetails.max_marks }</large><br/>
-                                <large>PASSING MARKS: { this.props.student.currentExam.examDetails.passing_marks }</large><br/><br/>
+                                <large>SUBJECT ID: { sub_id }</large><br/>                                
+                                <large>MAX MARKS: { max_marks }</large><br/>
+                                <large>PASSING MARKS: { passing_marks }</large><br/><br/>
                             </div>
                         </div> 
-                        <large className = "subject text-justify font-weight-bold">SUBJECT: { this.props.student.currentExam.examDetails.name }</large><br/><br/>                                                      
+                        <large className = "subject text-justify font-weight-bold">SUBJECT: { subject }</large><br/><br/>                                                      
                      </header>
 
                      <div className = "questionsList">
-                        { questions }
+                        { questions ? questions : "No questions" }
                      </div>
 
                      <div className = " container text-right">
                          <br/>
-                        <button className = "btn btn-primary" onClick = { this.submitExam }>
+                        <button className = "btn btn-primary" onClick = { e => this.submitExam(e) }>
                             SUBMIT
                         </button>
                         <br/><br/>
@@ -222,8 +223,6 @@ class student extends Component{
             </div>
         )
     }
-
-
 }
 
 const mapStateToProps = (state) => {
