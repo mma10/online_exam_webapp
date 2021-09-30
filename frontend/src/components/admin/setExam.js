@@ -5,17 +5,19 @@ import propTypes from 'prop-types';
 import { submitExamForm } from '../../store/actions/adminActions';
 
 class admin extends Component{
-    static propTypes = {
-      admin: propTypes.object.isRequired,
-      auth: propTypes.object.isRequired,
-      error: propTypes.object.isRequired
-    }
-
     componentDidMount(){
+        console.log("setExam component mounted")
         if(this.props.auth.type != "admin")
             this.props.history.push('/');
         
+        
     }
+
+    static propTypes = {
+        admin: propTypes.object.isRequired,
+        auth: propTypes.object.isRequired,
+        error: propTypes.object.isRequired
+      }
 
     state = {
         sub_id: null,
@@ -32,9 +34,10 @@ class admin extends Component{
     }
 
     addQuestion = (e) => {
-        this.setState((prevState) => ({
-            subjects: [...prevState.questions, {qid: "", statement: "", op1: "", op2: "", op3: "", op4: "", marks: "", ans: ""}],
-        }));
+        this.setState({
+            ...this.state,
+            questions: [...this.state.questions, {qid: "", statement: "", op1: "", op2: "", op3: "", op4: "", marks: "", ans: ""}]
+        });
     }
 
     submitExamForm(){
@@ -49,7 +52,7 @@ class admin extends Component{
     }
 
     render(){
-        var questions,subjects;
+        var questions = this.state.questions, subjects;
     return(
         <div className = "addQuestionPaper container">
 
@@ -81,7 +84,7 @@ class admin extends Component{
 
                     <button onClick={this.addQuestion}>Add question</button>
                         {
-                        questions.map((val, idx)=> {
+                        questions && questions.map((val, idx)=> {
                             let qid_ = `qid-${idx}`, statement_ = `statement-${idx}`, op1_ = `op1-${idx}`, op2_ = `op2-${idx}`, op3_ = `op3-${idx}`, op4_ = `op4-${idx}`, ans_ = `ans-${idx}`,marks_ = `marks-${idx}`
                             return (
                             <div key={idx}>
@@ -107,7 +110,7 @@ class admin extends Component{
                         }
 
 
-                    <button className = "btn btn-primary" onClick = {this.addadmin}>
+                    <button className = "btn btn-primary">
                         ADD
                     </button><br/>
                 </div>                    

@@ -43,13 +43,12 @@ export const showStudentExams = eid => dispatch => {
                     status: err.response.status,
                     id: 'GET_STUDENT_EXAMS_FAILED'                
                 }
-            })
+            });        
        }
     });
 }
 
 export const updateCurrentExamSubId = (subId) => dispatch => {
-    console.log('updateCurre... func ran');
     dispatch({
         type: 'SET_CURRENT_SUB_ID',
         payload: subId
@@ -64,17 +63,19 @@ export const showExamPaper = subId => dispatch => {
             type: 'DISPLAY_STUDENT_EXAM',
             payload: res.data
         });
+        alert('YOUR EXAM BEGINS NOW');
     })
     .catch(err => {
         if(err.response){
             dispatch({
-            type: 'GET_ERROR',
+                type: 'GET_ERROR',
                 payload: {
                     msg: err.response.data.msg,
                     status: err.response.status,
                     id: 'DISPLAY_STUDENT_EXAM_FAILED'                
                 }
-            })
+            });
+            alert(err.response.data.msg);
        }
     })
 }

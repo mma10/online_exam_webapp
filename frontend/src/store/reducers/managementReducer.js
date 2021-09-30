@@ -1,6 +1,7 @@
 const initState = {
     id: null,
     name: null,
+
     students: null
         // {id: 1, name: "A", class: 1, batch: 2020},
         // {id: 2, name: "B", class: 1, batch: 2020},
@@ -10,7 +11,10 @@ const initState = {
         // {id: 6, name: "F", class: 3, batch: 2018},
     ,
     admins: null,
+        // {id: 1, name: "admin_1"}
+
     exams: null,
+
     invigilators: null
         // {id: 1, name: "A"},
         // {id: 2, name: "B"},
@@ -50,18 +54,24 @@ const invigilatorReducer = (state = initState,action) => {
                     id: inv.inv_id,
                     name: inv.name
                 });
-            })
+            });
             return({
                 ...state,
                 invigilators
             });
 
-        // case 'GET_ALL_ADMINS':
-        //     return({
-        //         ...state,
-        //         admins: action.payload
-        //     });
-            
+        case 'GET_ALL_ADMINS':
+            let admins = action.payload && action.payload.map(admin => {
+                return({
+                    id: admin.ad_id,
+                    name: admin.name
+                });
+            });
+            return({
+                ...state,
+                admins: admins
+            });
+
         case 'CLEAR_MANAGEMENT':
             return({
                 ...state,

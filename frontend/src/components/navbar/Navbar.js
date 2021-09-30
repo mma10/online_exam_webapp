@@ -90,7 +90,7 @@ class navbar extends Component{
                 </li>
 
                 <li className = "nav-item">
-                    <NavLink to = "/student/setExam" className = "nav-link">
+                    <NavLink to = "/admin/setExam" className = "nav-link">
                         <span>SET EXAM</span>
                     </NavLink>
                 </li >

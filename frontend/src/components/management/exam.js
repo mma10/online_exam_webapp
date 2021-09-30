@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 
-import managementStudents from '../../styles/managementExams.css';
+import '../../styles/managementExams.css';
 
 import { findAllExams, deleteExam, checkExamTime } from '../../store/actions/managementActions';
 

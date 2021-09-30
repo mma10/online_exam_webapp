@@ -243,7 +243,7 @@ exports.addAdmin=(req,res)=>{
     var details=auth.checkAuth(req);
     if(!details) return res.redirect(base_url);
     if(details['actype']!='management'){
-        return res.status(200).json({
+        return res.status(401).json({
             msg :"You Don't Have Management Account"
         });
     };
@@ -267,7 +267,7 @@ exports.addAdmin=(req,res)=>{
         if(err){
             sql=require('../models/db');
             console.log(err);
-            return res.status(200).json({
+            return res.status(400).json({
                 msg :"Error"
             });
         }
@@ -283,7 +283,7 @@ exports.addAdmin=(req,res)=>{
             if(err){
                 sql=require('../models/db');
                 console.log(err);
-                return res.status(200).json({
+                return res.status(400).json({
                     msg :"Error"
                 });
             };

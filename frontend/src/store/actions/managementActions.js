@@ -1,6 +1,8 @@
 import axios from "axios";
 const proxy = "http://localhost:4000";
 
+// Student Actions
+
 export const getAllStudents = () => dispatch => {
     const token = localStorage.getItem('token');
     axios.get('http://localhost:4000/api/management/students/' + token)
@@ -29,7 +31,7 @@ export const addStudent = (newStudent) => dispatch => {
     .then(res => {
         // dispatch({
         //     type: 'ADD_STUDENT',
-        //     payload: res.data
+        //     payload: 
         // })
         alert(res.data.msg);
     })
@@ -66,7 +68,7 @@ export const deleteStudent = id => dispatch => {
     });
 }
 
-
+// Invigilator Actions
 
 export const getAllInvigilators = () => dispatch => {
     const token = localStorage.getItem('token');
@@ -169,3 +171,71 @@ export const removeInvigilatorExam = (id,eid) => dispatch => {
             });
     });
 }
+
+// Admin Actions
+
+export const findAllAdmins = () => dispatch => {
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:4000/api/management/admins/' + token)
+    .then(res => {
+        dispatch({
+            type: 'GET_ALL_ADMINS',
+            payload: res.data
+        });
+    })
+    .catch(err => {
+        if(err.response)
+            dispatch({
+                type: 'GET_ERROR',
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'GET_ALL_ADMINS_FAILED'                
+                }
+            });
+    });
+}
+
+
+export const deleteAdmin = (id) => dispatch => {
+    const token = localStorage.getItem('token');
+    axios.delete('http://localhost:4000/api/management/' + id + '/admin/' + token)
+    .then(res => {
+        // dispatch()
+        alert(res.data.msg)
+    })
+    .catch(err => {
+        if(err.response)
+            dispatch({
+                type: 'GET_ERROR',
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'DELETE_ADMIN_FAILED'                
+                }
+            });
+    });
+}
+
+export const addAdmin = (newAdmin) => dispatch => {
+    const token = localStorage.getItem('token');
+    axios.post('http://localhost:4000/api/management/admin/' + token,newAdmin)
+    .then(res => {
+        // dispatch()
+        alert(res.data.msg);
+    })
+    .catch(err => {
+        if(err.response)
+            dispatch({
+                type: 'GET_ERROR',
+                payload: {
+                    msg: err.response.data.msg,
+                    status: err.response.status,
+                    id: 'ADD_ADMIN_FAILED'                
+                }
+            });
+    });
+
+}
+
+

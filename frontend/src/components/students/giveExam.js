@@ -84,7 +84,14 @@ class student extends Component{
         console.log(this.state.res,'latest response');    
     }
 
-    render(){          
+    render(){ 
+            if(this.props.student.currentExam.length == 0)
+                return(
+                    <div>
+                        
+                    </div>
+                );
+
             if(this.props.questions){
                 // Sort questions ordered by qid
                 this.props.student.questions.sort(function(a,b){

@@ -17,6 +17,8 @@ import invigilator from '../src/components/invigilator/invigilator';
 
 import students from '../src/components/management/students';
 import invigilators from '../src/components/management/invigilators';
+import admins from '../src/components/management/admin';
+// import exam from '../src/components/management/students'
 
 import { Route } from 'react-router-dom';
 import axios from 'axios';
@@ -27,8 +29,7 @@ import { connect } from 'react-redux';
 
 class App extends Component{
   componentDidMount(){
-    // Get the token from the backend and store locally
-    
+    // Get the token from the backend and store locally    
     const token = localStorage.getItem('token');
     axios.get("http://localhost:4000/api/auth/" + token)
     .then(res => {
@@ -40,7 +41,6 @@ class App extends Component{
     });
 
     // Check if the user if already logged in. If yes, retrieve the corresponsing data
-
     const auth = localStorage.getItem('auth');
     if(auth){
       // Call the loadUser action
@@ -66,8 +66,8 @@ class App extends Component{
 
         <Route exact path = "/management/students" component = { students }/>
         <Route exact path = "/management/invigilators" component = { invigilators }/>
-        {/* <Route exact path = "/management/admins" component = { student }/>         */}
-        {/* <Route exact path = "/management/exams" component = { student }/> */}
+        <Route exact path = "/management/admins" component = { admins }/>        
+        {/* <Route exact path = "/management/exams" component = { exam }/> */}
       </div>
     );
   }

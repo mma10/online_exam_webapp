@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 
-import managementadmins from '../../styles/managementAdmins.css';
+import'../../styles/managementAdmins.css';
 
 import { deleteAdmin, addAdmin, findAllAdmins } from '../../store/actions/managementActions';
 
@@ -18,6 +18,8 @@ class admins extends Component{
     componentDidMount(){
         if(this.props.auth.type != "management")
             this.props.history.push('/');
+
+            this.props.findAllAdmins();
     }
 
     state = {
@@ -39,14 +41,14 @@ class admins extends Component{
         }));
     }
 
-    deleteAdmin = (id,e) => {
+    deleteAdminFunc = (id,e) => {
         e.persist();
 
         // Call action to delete data
         this.props.deleteAdmin(id);
     }
 
-    addAdmin = () => {
+    addAdminFunc = () => {
         // Check if all fields are filled
         if(!this.state.name || !this.state.username || !this.state.password)
             return alert('Please enter all fields');
@@ -57,6 +59,8 @@ class admins extends Component{
 
     render(){
         const adminsArray = this.props.management.admins;
+        let subjects = [];
+
         const admins = adminsArray && adminsArray.map(admin => {
             return(
                 <div className = "col-lg-4 col-md-4 col-sm-6 pt-2 pb-2" key = { admin.id }>
@@ -70,7 +74,7 @@ class admins extends Component{
                             </div>
                         </div>
                         <div className = "card-footer">
-                            <button className = "btn btn-danger" onClick = { (e) => this.deleteadmin(admin.id,e) }>DELETE</button>
+                            <button className = "btn btn-danger" onClick = { (e) => this.deleteAdminFunc(admin.id,e) }>DELETE</button>
                         </div>
                    </div>
                 </div>
@@ -125,7 +129,7 @@ class admins extends Component{
                             }
 
 
-                        <button className = "btn btn-primary" onClick = {this.addadmin}>
+                        <button className = "btn btn-primary" onClick = {this.addAdminFunc}>
                             ADD
                         </button><br/>
                     </div>                    

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 
-import managementStudents from '../../styles/managementStudents.css';
+import '../../styles/managementStudents.css';
 
 import { getAllStudents, deleteStudent, addStudent } from '../../store/actions/managementActions';
 
@@ -56,14 +56,7 @@ class students extends Component{
 
     render(){      
         const studentsArray = this.props.management.students;
-        if(this.props.management.students){
-            studentsArray.sort(function(a,b){
-                if(a.class <= b.class)
-                    return -1;
-                else    
-                    return 1;
-            });
-        }        
+            
         const students = studentsArray && studentsArray.map(student => {
             return(
                 <div className = "col-lg-4 col-md-4 col-sm-6 pt-2 pb-2" key = { student.id }>
